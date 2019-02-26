@@ -4,10 +4,13 @@ Chisel IP Contributions
 If you are here you are hopefully considering contributing some useful chisel modules to
 the community. This is the place to do it.
 
-> More and more users are finding IntelliJ to be a powerful tool for Chisel coding. See the 
-[IntelliJ Installation Guide](https://github.com/ucb-bar/chisel-template/wiki/IntelliJ-Installation-Guide) for how to install it.
+## Contributions
 
-## Add your Chisel code
+| Package | Type | Author | Descpription |
+| --- | --- | --- | --- |
+| BitonicSorter   | internal |  Steve Burns  | A combinational sort generator for arbitrarily typed Vectors |
+
+
 ### Getting Started
 
 To begin with you should have some working Chisel code. 
@@ -17,11 +20,10 @@ placing your circuit and it's unit tests in those respective directories.
 
 ### The Requirements
 
-- Code Style
-- Unit Tests
-- Useful Readme
-- License
-- Other documentation
+- Code Style should reasonably follow the default style guide used by the Chisel3 project. See [the chisel3 scalastyle-config](https://github.com/freechipsproject/chisel3/blob/master/scalastyle-config.xml)
+- Unit Tests should be provided that reasonable confidence that a contribution works
+- Useful README.md should be added in your package directory with contribution specific info.
+- Licensing this code is still a  **WIP**
 
 ### Vetting
 
