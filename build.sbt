@@ -30,9 +30,12 @@ name := "ip-contributions"
 
 version := "1.0.0"
 
-scalaVersion := "2.12.8"
+val scala211 = "2.11.12"
+val scala212 = "2.12.8"
 
-crossScalaVersions := Seq("2.11.12", "2.12.4")
+scalaVersion := scala212
+
+crossScalaVersions := Seq(scala212, scala211)
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
