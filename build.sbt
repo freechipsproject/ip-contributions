@@ -30,7 +30,7 @@ name := "ip-contributions"
 
 version := "1.0.0"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.8"
 
 crossScalaVersions := Seq("2.11.12", "2.12.4")
 
@@ -41,11 +41,13 @@ resolvers ++= Seq(
 
 // Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
 val defaultVersions = Map(
-  "chisel3" -> "3.1.+",
-  "chisel-iotesters" -> "[1.2.5,1.3-SNAPSHOT["
+  "chisel3" -> "3.2-SNAPSHOT",
+  "chisel-iotesters" -> "1.3-SNAPSHOT",
+  "chisel-testers2" -> "0.1-SNAPSHOT",
+  "dsptools"         -> "1.2-SNAPSHOT"
   )
 
-libraryDependencies ++= Seq("chisel3","chisel-iotesters").map {
+libraryDependencies ++= Seq("chisel3", "chisel-testers2", "chisel-iotesters", "dsptools").map {
   dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep)) }
 
 scalacOptions ++= scalacOptionsVersion(scalaVersion.value)
