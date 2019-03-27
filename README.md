@@ -9,6 +9,7 @@ the community. This is the place to do it.
 | Package | Type | Author | Descpription |
 | --- | --- | --- | --- |
 | BitonicSorter   | internal |  Steve Burns  | A combinational sort generator for arbitrarily typed Vectors |
+| IterativeCordic   | internal |  Harrison Liew  | An iterative Cordic implementation |
 
 
 ### Getting Started
