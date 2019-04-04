@@ -4,21 +4,42 @@ Chisel IP Contributions
 If you are here you are hopefully considering contributing some useful chisel modules to
 the community. This is the place to do it.
 
-## Contributions
+## Current Contributions
 
-| Package | Type | Author | Descpription |
+| Package | Type | Developer | Descpription |
 | --- | --- | --- | --- |
 | BitonicSorter   | internal |  Steve Burns  | A combinational sort generator for arbitrarily typed Vectors |
 | IterativeCordic   | internal |  Harrison Liew  | An iterative Cordic implementation |
+| aes_chisel   | maven | Sergiu Mosanu | Implementation of the Advanced Encryption Standard (AES)<br> [How to get it](#aes_chisel)  |
 
 
 ### Getting Started
 
 To begin with you should have some working Chisel code. 
 Adding it is designed to be as simple as possible.
-You will be creating a new package here in the src/main/scala and src/test/scala and 
-placing your circuit and it's unit tests in those respective directories.
+There are two main ways to go about this.
+1. Creating a new package here in the src/main/scala and src/test/scala and place your circuit and it's unit tests in those respective directories. [More about this](more-on-locally-provided-contributions)
+1. Create an external repository and distribute it via the [Maven](https://maven.apache.org/), let us review it and provides links to it.
 
+### External Contributions
+
+---
+
+#### aes_chisel
+- **Developer** Sergiu Mosanu
+- **Repository** [https://github.com/hplp/aes_chisel](https://github.com/hplp/aes_chisel)
+- **Versions** 3.2, 3.1
+- **Sbt Dependency** com.github.hplp" %% "aes_chisel" % "3.2.0"
+
+**aes_chisel**'s goals are to:
+* Implement an open-source, transparent, secure encryption module in Chisel
+* Equip developers with ready-to-use, efficient, parameterizable, encryption macros for RISC-V systems
+* Compare performance and resource utilization of generated HDL with pure Verilog and Vivado HLS
+* Compare code size with Verilog, Python, C++ and Vivado HLS as a index of development productivity
+
+---
+
+## More on Locally Provided Contributions
 ### The Requirements
 
 - Code Style should reasonably follow the default style guide used by the Chisel3 project. See [the chisel3 scalastyle-config](https://github.com/freechipsproject/chisel3/blob/master/scalastyle-config.xml)
