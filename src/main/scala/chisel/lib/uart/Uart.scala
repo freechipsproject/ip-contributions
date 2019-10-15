@@ -23,7 +23,7 @@ class UartIO extends DecoupledIO(UInt(8.W)) {
  */
 class Tx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
-    val txd = Output(Bits(1.W))
+    val txd = Output(UInt(1.W))
     val channel = Flipped(new UartIO())
   })
 
@@ -67,7 +67,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
  */
 class Rx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
-    val rxd = Input(Bits(1.W))
+    val rxd = Input(UInt(1.W))
     val channel = new UartIO()
   })
 
@@ -139,7 +139,7 @@ class Buffer extends Module {
  */
 class BufferedTx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
-    val txd = Output(Bits(1.W))
+    val txd = Output(UInt(1.W))
     val channel = Flipped(new UartIO())
   })
   val tx = Module(new Tx(frequency, baudRate))
@@ -155,7 +155,7 @@ class BufferedTx(frequency: Int, baudRate: Int) extends Module {
  */
 class Sender(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
-    val txd = Output(Bits(1.W))
+    val txd = Output(UInt(1.W))
   })
 
   val tx = Module(new BufferedTx(frequency, baudRate))
@@ -178,8 +178,8 @@ class Sender(frequency: Int, baudRate: Int) extends Module {
 
 class Echo(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
-    val txd = Output(Bits(1.W))
-    val rxd = Input(Bits(1.W))
+    val txd = Output(UInt(1.W))
+    val rxd = Input(UInt(1.W))
   })
   // io.txd := RegNext(io.rxd)
   val tx = Module(new BufferedTx(frequency, baudRate))
@@ -191,8 +191,8 @@ class Echo(frequency: Int, baudRate: Int) extends Module {
 
 class UartMain(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
-    val rxd = Input(Bits(1.W))
-    val txd = Output(Bits(1.W))
+    val rxd = Input(UInt(1.W))
+    val txd = Output(UInt(1.W))
   })
 
   val doSender = true
