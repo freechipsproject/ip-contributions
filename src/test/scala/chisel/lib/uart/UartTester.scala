@@ -12,16 +12,16 @@ class TxTester(dut: Tx) extends PeekPokeTester(dut) {
 
   step(2)
   poke(dut.io.channel.valid, 1)
-  poke(dut.io.channel.data, 'A')
+  poke(dut.io.channel.bits, 'A')
   step(4)
   poke(dut.io.channel.valid, 0)
-  poke(dut.io.channel.data, 0)
+  poke(dut.io.channel.bits, 0)
   step(40)
   poke(dut.io.channel.valid, 1)
-  poke(dut.io.channel.data, 'B')
+  poke(dut.io.channel.bits, 'B')
   step(4)
   poke(dut.io.channel.valid, 0)
-  poke(dut.io.channel.data, 0)
+  poke(dut.io.channel.bits, 0)
   step(30)
 }
 
@@ -35,17 +35,17 @@ class BufferedTxTester(dut: BufferedTx) extends PeekPokeTester(dut) {
 
   step(2)
   poke(dut.io.channel.valid, 1)
-  poke(dut.io.channel.data, 'A')
+  poke(dut.io.channel.bits, 'A')
   // now we have a buffer, keep valid only a single cycle
   step(1)
   poke(dut.io.channel.valid, 0)
-  poke(dut.io.channel.data, 0)
+  poke(dut.io.channel.bits, 0)
   step(40)
   poke(dut.io.channel.valid, 1)
-  poke(dut.io.channel.data, 'B')
+  poke(dut.io.channel.bits, 'B')
   step(1)
   poke(dut.io.channel.valid, 0)
-  poke(dut.io.channel.data, 0)
+  poke(dut.io.channel.bits, 0)
   step(30)
 }
 
