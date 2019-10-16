@@ -45,11 +45,10 @@ There are two main ways to go about this.
 - **Sbt Dependency** com.github.hplp" %% "spi2wb" % "1.2"
 
 **spi2wb**'s goals are to:
-* Drive a wisbone master bus with SPI
+* Drive a wishbone master bus with SPI
 * Be easy to integrate in little FPGA
-* Be used with USB tools like BusPirate
-* Avoid usage of softcore under the FPGA
-
+* Be used with simple computer and USB tools like BusPirate
+* Avoid usage of softcore under the FPGA to drive wishbone peripherals
 
 ---
 
