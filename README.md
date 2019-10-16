@@ -12,6 +12,7 @@ the community. This is the place to do it.
 | IterativeCordic   | internal |  Harrison Liew  | An iterative Cordic implementation |
 | aes_chisel   | maven | Sergiu Mosanu | Implementation of the Advanced Encryption Standard (AES)<br> [How to get it](#aes_chisel)  |
 | uart | internal | Martin Schoeberl | a basic serial port (UART) |
+| spi2wb | maven | Fabien Marteau | Drive a wishbone master bus with SPI |
 
 ### Getting Started
 
@@ -36,6 +37,19 @@ There are two main ways to go about this.
 * Equip developers with ready-to-use, efficient, parameterizable, encryption macros for RISC-V systems
 * Compare performance and resource utilization of generated HDL with pure Verilog and Vivado HLS
 * Compare code size with Verilog, Python, C++ and Vivado HLS as a index of development productivity
+
+#### spi2wb
+- **Developer** Fabien Marteau
+- **Repository** [https://github.com/Martoni/spi2wb](https://github.com/Martoni/spi2wb)
+- **Versions** 1.2, 1.1, 1.0
+- **Sbt Dependency** com.github.hplp" %% "spi2wb" % "1.2"
+
+**spi2wb**'s goals are to:
+* Drive a wisbone master bus with SPI
+* Be easy to integrate in little FPGA
+* Be used with USB tools like BusPirate
+* Avoid usage of softcore under the FPGA
+
 
 ---
 
