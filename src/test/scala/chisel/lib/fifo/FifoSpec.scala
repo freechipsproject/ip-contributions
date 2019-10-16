@@ -1,3 +1,9 @@
+/*
+ * Testing FIFO queue variations
+ *
+ * Author: Martin Schoeberl (martin@jopdesign.com)
+ */
+
 package chisel.lib.fifo
 
 import chisel3._
