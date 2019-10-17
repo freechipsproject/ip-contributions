@@ -41,8 +41,8 @@ There are two main ways to go about this.
 #### spi2wb
 - **Developer** Fabien Marteau
 - **Repository** [https://github.com/Martoni/spi2wb](https://github.com/Martoni/spi2wb)
-- **Versions** 1.2, 1.1, 1.0
-- **Sbt Dependency** com.github.hplp" %% "spi2wb" % "1.2"
+- **Versions** 1.3, 1.2, 1.1, 1.0
+- **Sbt Dependency** com.github.hplp" %% "spi2wb" % "1.3"
 
 **spi2wb**'s goals are to:
 * Drive a wishbone master bus with SPI
