@@ -1,8 +1,5 @@
-/*
- * FIFO queue variations
- *
- * Author: Martin Schoeberl (martin@jopdesign.com)
- */
+// Author: Martin Schoeberl (martin@jopdesign.com)
+// License: this code is released into the public domain, see README.md and http://unlicense.org/
 
 package chisel.lib.fifo
 
@@ -22,4 +19,6 @@ class FifoIO[T <: Data](private val gen: T) extends Bundle {
   */
 abstract class Fifo[T <: Data](gen: T, depth: Int) extends Module {
   val io = IO(new FifoIO(gen))
+
+  assert(depth > 0, "Number of buffer elements needs to be larger than 0")
 }

@@ -1,8 +1,5 @@
-/*
- * FIFO queue variations
- *
- * Author: Martin Schoeberl (martin@jopdesign.com)
- */
+// Author: Martin Schoeberl (martin@jopdesign.com)
+// License: this code is released into the public domain, see README.md and http://unlicense.org/
 
 package chisel.lib.fifo
 
@@ -14,7 +11,7 @@ import chisel3._
   */
 class BubbleFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
-  private class Buffer[T <: Data](gen: T) extends Module {
+  private class Buffer() extends Module {
     val io = IO(new FifoIO(gen))
 
     val fullReg = RegInit(false.B)
@@ -36,7 +33,7 @@ class BubbleFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int)
     io.deq.bits := dataReg
   }
 
-  private val buffers = Array.fill(depth) { Module(new Buffer(gen)) }
+  private val buffers = Array.fill(depth) { Module(new Buffer()) }
   for (i <- 0 until depth - 1) {
     buffers(i + 1).io.enq <> buffers(i).io.deq
   }

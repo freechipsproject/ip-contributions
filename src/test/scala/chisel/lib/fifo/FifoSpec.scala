@@ -1,8 +1,5 @@
-/*
- * Testing FIFO queue variations
- *
- * Author: Martin Schoeberl (martin@jopdesign.com)
- */
+// Author: Martin Schoeberl (martin@jopdesign.com)
+// License: this code is released into the public domain, see README.md and http://unlicense.org/
 
 package chisel.lib.fifo
 
@@ -10,10 +7,14 @@ import chisel3._
 import chisel3.iotesters.PeekPokeTester
 import org.scalatest._
 
+
 object FifoTester {
   val param = Array("--target-dir", "generated", "--generate-vcd-output", "on")
 }
 
+/**
+  * Testing FIFO queue variations
+  */
 class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
 
   // some defaults for all signals

@@ -1,8 +1,5 @@
-/*
- * FIFO queue variations
- *
- * Author: Martin Schoeberl (martin@jopdesign.com)
- */
+// Author: Martin Schoeberl (martin@jopdesign.com)
+// License: this code is released into the public domain, see README.md and http://unlicense.org/
 
 package chisel.lib.fifo
 

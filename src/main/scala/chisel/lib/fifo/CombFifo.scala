@@ -1,15 +1,12 @@
-/*
- * FIFO queue variations
- *
- * Author: Martin Schoeberl (martin@jopdesign.com)
- */
+// Author: Martin Schoeberl (martin@jopdesign.com)
+// License: this code is released into the public domain, see README.md and http://unlicense.org/
 
 package chisel.lib.fifo
 
 import chisel3._
 
 /**
-  * FIFO combining the memory FIFO with a single stage double buffer FIFO
+  * A FIFO queue combining the memory FIFO with a single stage double buffer FIFO
   * to decouple the combinational path from the memory read port to the output.
   */
 class CombFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {

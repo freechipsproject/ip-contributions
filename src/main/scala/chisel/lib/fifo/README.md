@@ -1,6 +1,6 @@
 # First-In-First-Out (FIFO) Queues
 
-Different implementations of FIFO queues. Small queus can be register based
+Different implementations of FIFO queues. Small queues can be register based
 (```BubbleFifo```, ```DoubleBufferFifo```, or ```RegFifo```). Larger queues shall use on-chip
 memory (```MemFifo```). Combination of two different FIFOs is shown in ```CombFifo```.
 
