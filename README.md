@@ -13,6 +13,7 @@ the community. This is the place to do it.
 | aes_chisel   | maven | Sergiu Mosanu | Implementation of the Advanced Encryption Standard (AES)<br> [How to get it](#aes_chisel)  |
 | uart | internal | Martin Schoeberl | A basic serial port (UART) |
 | fifo | internal | Martin Schoeberl | Variations of FIFO queues |
+| spi2wb | maven | Fabien Marteau | Drive a wishbone master bus with SPI |
 
 ### Getting Started
 
@@ -37,6 +38,18 @@ There are two main ways to go about this.
 * Equip developers with ready-to-use, efficient, parameterizable, encryption macros for RISC-V systems
 * Compare performance and resource utilization of generated HDL with pure Verilog and Vivado HLS
 * Compare code size with Verilog, Python, C++ and Vivado HLS as a index of development productivity
+
+#### spi2wb
+- **Developer** Fabien Marteau
+- **Repository** [https://github.com/Martoni/spi2wb](https://github.com/Martoni/spi2wb)
+- **Versions** 1.3, 1.2, 1.1, 1.0
+- **Sbt Dependency** com.github.hplp" %% "spi2wb" % "1.3"
+
+**spi2wb**'s goals are to:
+* Drive a wishbone master bus with SPI
+* Be easy to integrate in little FPGA
+* Be used with simple computer and USB tools like BusPirate
+* Avoid usage of softcore under the FPGA to drive wishbone peripherals
 
 ---
 
