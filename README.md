@@ -11,7 +11,8 @@ the community. This is the place to do it.
 | BitonicSorter   | internal |  Steve Burns  | A combinational sort generator for arbitrarily typed Vectors |
 | IterativeCordic   | internal |  Harrison Liew  | An iterative Cordic implementation |
 | aes_chisel   | maven | Sergiu Mosanu | Implementation of the Advanced Encryption Standard (AES)<br> [How to get it](#aes_chisel)  |
-| uart | internal | Martin Schoeberl | a basic serial port (UART) |
+| uart | internal | Martin Schoeberl | A basic serial port (UART) |
+| fifo | internal | Martin Schoeberl | Variations of FIFO queues |
 | spi2wb | maven | Fabien Marteau | Drive a wishbone master bus with SPI |
 
 ### Getting Started
