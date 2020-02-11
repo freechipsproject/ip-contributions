@@ -13,10 +13,17 @@ class EccGenerate[D <: Data](data: D) extends Module {
 
   val bitValue = Wire(Vec(eccBits, Bool()))
   val outWidth = io.in.getWidth + eccBits
-  val bitMapping = calcBitMapping(outWidth, false)
+  val bitMapping = calcBitMapping(data.getWidth, false)
 
-  for (i <- 0 to eccBits) {
+  //println("eccBits=%d width=%d outWidth=%d".format(eccBits, data.getWidth, outWidth) + bitMapping)
+  for (i <- 0 until eccBits) {
+    /*
+    for (j <- buildSeq(i, outWidth)) {
+      println(i, j, bitMapping(j))
+    }
+     */
     val bitSelect : Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.in.asUInt()(bitMapping(j))
+    //println("bitSelectList(i=%d):".format(i) + bitSelect)
     bitValue(i) := bitSelect.reduce(_ ^ _)
   }
   io.out := Cat(bitValue.reverse)

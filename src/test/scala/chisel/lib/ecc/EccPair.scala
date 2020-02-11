@@ -31,4 +31,5 @@ class EccPair(width : Int) extends Module {
   eccCheck.io.dataIn := intermediate
   eccCheck.io.eccIn := eccGen.io.out
   io.dataOut := eccCheck.io.dataOut
+  io.syndromeOut := eccCheck.io.errorSyndrome
 }

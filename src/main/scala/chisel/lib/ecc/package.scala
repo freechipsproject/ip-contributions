@@ -24,7 +24,7 @@ package object ecc {
     var mapping1 = new ListBuffer[Int]()
     var mapping2 = new ListBuffer[Int]()
 
-    for (i <- 1 until outWidth) {
+    for (i <- 1 until outWidth+1) {
       if (pow2(power) == i)
         power += 1
       else {
@@ -51,7 +51,6 @@ package object ecc {
       check = 0
 
     while (cur < outWidth) {
-      println(cur, skip, check, bitIndex)
       if (check > 0) {
         if (cur != pow2(bitNum)-1)
           bitIndex += cur
