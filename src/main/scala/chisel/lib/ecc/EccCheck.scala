@@ -38,7 +38,7 @@ class EccCheck[D <: Data](data: D) extends Module {
     val bitSelect : Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield vecIn(j)
     errorSynVec(i) := bitSelect.reduce(_ ^ _)
   }
-  io.errorSyndrome := Cat(errorSynVec.reverse)
+  io.errorSyndrome := Cat(errorSynVec.reverse) ^ io.eccIn
 
   // correct the bit error
   correctedOut := vecIn

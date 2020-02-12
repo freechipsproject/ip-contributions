@@ -5,7 +5,12 @@ import scala.collection.mutable.ListBuffer
 
 package object ecc {
   def pow2(x : Int) : Int = {
-    scala.math.ceil(scala.math.pow(2, x)).toInt
+    if (x == 0) {
+      1
+    } else {
+      1 << x
+    }
+    //scala.math.ceil(scala.math.pow(2, x)).toInt
   }
 
   def calcCodeBits(dataBits : Int) : Int = {
