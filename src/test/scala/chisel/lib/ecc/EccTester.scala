@@ -1,8 +1,52 @@
-package chisel.lib.ecc
+//package chisel.lib.ecc
+package chiseltest.tests
 
 import chisel3._
-import chisel3.iotesters.PeekPokeTester
+import chisel3.tester.ChiselScalatestTester
+import org.scalatest._
+//import chisel3.iotesters.PeekPokeTester
+import chiseltest._
+import chisel.lib.ecc._
+import scala.util.Random
 
+class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
+  behavior of "Testers2"
+
+  it should "send data without errors" in {
+    test(new EccPair(width=8)) {
+      c => {
+        val rnd = new Random()
+        for (i <- 0 to 20) {
+          val testVal = rnd.between(0, 1 << c.getWidthParam)
+
+          c.io.dataIn.poke(testVal.U)
+          c.io.errorLocation.poke(0.U)
+          c.io.injectError.poke(0.U)
+          c.clock.step(1)
+          c.io.dataOut.expect(testVal.U)
+        }
+      }
+    }
+  }
+
+  it should "correct single bit errors" in {
+    test(new EccPair(width=8)) {
+      c => {
+        val rnd = new Random()
+        for (i <- 0 to c.getWidthParam) {
+          val testVal = rnd.between(0, 1 << c.getWidthParam)
+
+          c.io.dataIn.poke(testVal.U)
+          c.io.errorLocation.poke(i.U)
+          c.io.injectError.poke(1.U)
+          c.clock.step(1)
+          c.io.dataOut.expect(testVal.U)
+        }
+      }
+    }
+  }
+}
+/*
 class EccTester(dut: EccPair) extends PeekPokeTester(dut) {
   val dutWidth = dut.getWidthParam
   var testVal : Int = 0
@@ -28,6 +72,7 @@ class EccTester(dut: EccPair) extends PeekPokeTester(dut) {
     expect(dut.io.dataOut, testVal.U)
   }
 }
+*/
 
 object EccTester extends App {
   for (width <- 8 to 32) {
