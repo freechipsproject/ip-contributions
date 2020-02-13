@@ -14,6 +14,7 @@ the community. This is the place to do it.
 | uart | internal | Martin Schoeberl | A basic serial port (UART) |
 | fifo | internal | Martin Schoeberl | Variations of FIFO queues |
 | spi2wb | maven | Fabien Marteau | Drive a wishbone master bus with SPI |
+| dclib | internal | Guy Hutchison | Utility components for DecoupledIO interfaces |
 
 ### Getting Started
 
