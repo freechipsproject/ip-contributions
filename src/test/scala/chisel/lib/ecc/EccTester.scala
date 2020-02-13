@@ -1,12 +1,12 @@
-//package chisel.lib.ecc
-package chiseltest.tests
+// See README.md for license details.
+
+package chisel.lib.ecc
 
 import chisel3._
-import chisel3.tester.ChiselScalatestTester
+import chiseltest._
 import org.scalatest._
 //import chisel3.iotesters.PeekPokeTester
-import chiseltest._
-import chisel.lib.ecc._
+
 import scala.util.Random
 
 class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
@@ -17,11 +17,11 @@ class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
       c => {
         val rnd = new Random()
         for (i <- 0 to 20) {
-          val testVal = rnd.between(0, 1 << c.getWidthParam)
+          val testVal = rnd.nextInt(1 << c.getWidthParam)
 
           c.io.dataIn.poke(testVal.U)
           c.io.errorLocation.poke(0.U)
-          c.io.injectError.poke(0.U)
+          c.io.injectError.poke(false.B)
           c.clock.step(1)
           c.io.dataOut.expect(testVal.U)
         }
@@ -34,11 +34,11 @@ class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
       c => {
         val rnd = new Random()
         for (i <- 0 to c.getWidthParam) {
-          val testVal = rnd.between(0, 1 << c.getWidthParam)
+          val testVal = rnd.nextInt(1 << c.getWidthParam)
 
           c.io.dataIn.poke(testVal.U)
           c.io.errorLocation.poke(i.U)
-          c.io.injectError.poke(1.U)
+          c.io.injectError.poke(true.B)
           c.clock.step(1)
           c.io.dataOut.expect(testVal.U)
         }
@@ -75,11 +75,11 @@ class EccTester(dut: EccPair) extends PeekPokeTester(dut) {
 */
 
 object EccTester extends App {
-  for (width <- 8 to 32) {
-    iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new EccPair(width=width)) {
-      dut => new EccTester(dut)
-    }
-  }
+//  for (width <- 8 to 32) {
+//    iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new EccPair(width=width)) {
+//      dut => new EccTester(dut)
+//    }
+//  }
 }
 
 object EccGenerator extends App {
