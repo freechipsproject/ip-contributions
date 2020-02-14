@@ -1,3 +1,4 @@
+// See README.md for license details.
 package chisel.lib.ecc
 
 import chisel3._

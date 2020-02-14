@@ -22,8 +22,10 @@ class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
           c.io.dataIn.poke(testVal.U)
           c.io.errorLocation.poke(0.U)
           c.io.injectError.poke(false.B)
+          c.io.injectSecondError.poke(false.B)
           c.clock.step(1)
           c.io.dataOut.expect(testVal.U)
+          c.io.outputNotEqual.expect(false.B)
         }
       }
     }
@@ -39,8 +41,29 @@ class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
           c.io.dataIn.poke(testVal.U)
           c.io.errorLocation.poke(i.U)
           c.io.injectError.poke(true.B)
+          c.io.injectSecondError.poke(false.B)
           c.clock.step(1)
           c.io.dataOut.expect(testVal.U)
+          c.io.outputNotEqual.expect(false.B)
+        }
+      }
+    }
+  }
+
+  it should "correct double bit errors" in {
+    test(new EccPair(width=8)) {
+      c => {
+        val rnd = new Random()
+        for (i <- 0 to c.getWidthParam) {
+          val testVal = rnd.nextInt(1 << c.getWidthParam)
+
+          c.io.dataIn.poke(testVal.U)
+          c.io.errorLocation.poke(i.U)
+          c.io.injectError.poke(true.B)
+          c.io.injectSecondError.poke(true.B)
+          c.io.errorLocation.poke(((i+1)%c.getWidthParam).U)
+          c.clock.step(1)
+          c.io.outputNotEqual.expect(true.B)
         }
       }
     }

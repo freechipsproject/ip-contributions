@@ -1,3 +1,4 @@
+// See README.md for license details.
 package chisel.lib
 
 import scala.collection.immutable.Map
