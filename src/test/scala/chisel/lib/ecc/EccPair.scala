@@ -26,7 +26,7 @@ class EccPair(width : Int) extends Module {
   val eccGen = Module(new EccGenerate(io.dataIn.cloneType))
   val eccCheck = Module(new EccCheck(io.dataIn.cloneType))
 
-  eccGen.io.in := io.dataIn
+  eccGen.io.dataIn := io.dataIn
 
   when (io.injectError) {
     when (io.injectSecondError) {
@@ -39,8 +39,8 @@ class EccPair(width : Int) extends Module {
   }
 
   eccCheck.io.dataIn := intermediate
-  eccCheck.io.eccIn := eccGen.io.out
-  eccCheck.io.par.get := eccGen.io.par.get
+  eccCheck.io.eccIn := eccGen.io.eccOut
+  eccCheck.io.parIn.get := eccGen.io.parOut.get
   io.dataOut := eccCheck.io.dataOut
   io.syndromeOut := eccCheck.io.errorSyndrome
   io.outputNotEqual := io.dataIn =/= io.dataOut

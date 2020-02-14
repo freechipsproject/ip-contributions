@@ -8,21 +8,21 @@ class EccGenerate[D <: Data](data: D, doubleBit : Boolean = true) extends Module
   val eccBits = calcCodeBits(data.getWidth)
 
   val io = IO(new Bundle {
-    val in = Input(data.cloneType)
-    val out = Output(UInt(eccBits.W))
-    val par = if (doubleBit) Some(Output(Bool())) else None
+    val dataIn = Input(data.cloneType)
+    val eccOut = Output(UInt(eccBits.W))
+    val parOut = if (doubleBit) Some(Output(Bool())) else None
   })
 
   val bitValue = Wire(Vec(eccBits, Bool()))
-  val outWidth = io.in.getWidth + eccBits
+  val outWidth = io.dataIn.getWidth + eccBits
   val bitMapping = calcBitMapping(data.getWidth, false)
 
   for (i <- 0 until eccBits) {
-    val bitSelect : Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.in.asUInt()(bitMapping(j))
+    val bitSelect : Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.dataIn.asUInt()(bitMapping(j))
     bitValue(i) := bitSelect.reduce(_ ^ _)
   }
-  io.out := Cat(bitValue.reverse)
-  if (io.par.nonEmpty) {
-    io.par.get := io.in.asUInt().xorR() ^ io.out.xorR()
+  io.eccOut := Cat(bitValue.reverse)
+  if (io.parOut.nonEmpty) {
+    io.parOut.get := io.dataIn.asUInt().xorR() ^ io.eccOut.xorR()
   }
 }

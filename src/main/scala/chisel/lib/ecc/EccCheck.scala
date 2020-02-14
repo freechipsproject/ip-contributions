@@ -12,7 +12,7 @@ class EccCheck[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
     val eccIn = Input(UInt(eccBits.W))
     val dataOut = Output(data.cloneType)
     val errorSyndrome = Output(UInt(eccBits.W))
-    val par = if (doubleBit) Some(Input(Bool())) else None
+    val parIn = if (doubleBit) Some(Input(Bool())) else None
     val doubleBitError = if (doubleBit) Some(Output(Bool())) else None
   })
 
@@ -54,6 +54,6 @@ class EccCheck[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
   if (io.doubleBitError.isDefined) {
     val computedParity = Wire(Bool())
     computedParity := io.dataIn.asUInt().xorR() ^ io.eccIn.xorR()
-    io.doubleBitError.get := (io.errorSyndrome =/= 0.U) && (computedParity === io.par.get)
+    io.doubleBitError.get := (io.errorSyndrome =/= 0.U) && (computedParity === io.parIn.get)
   }
 }
