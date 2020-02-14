@@ -1,3 +1,5 @@
+// See README.md for license details.
+
 package chisel.lib.ecc
 import chisel3._
 import chisel3.util._
@@ -15,6 +17,7 @@ class EccPair(width : Int) extends Module {
     val injectSecondError = Input(Bool())
     val secondErrorLocation = Input(UInt(log2Ceil(width).W))
     val outputNotEqual = Output(Bool())
+    val doubleBitError = Output(Bool())
   })
 
   def getWidthParam : Int = { width }
@@ -37,7 +40,9 @@ class EccPair(width : Int) extends Module {
 
   eccCheck.io.dataIn := intermediate
   eccCheck.io.eccIn := eccGen.io.out
+  eccCheck.io.par.get := eccGen.io.par.get
   io.dataOut := eccCheck.io.dataOut
   io.syndromeOut := eccCheck.io.errorSyndrome
   io.outputNotEqual := io.dataIn =/= io.dataOut
+  io.doubleBitError := eccCheck.io.doubleBitError.get
 }
