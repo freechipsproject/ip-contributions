@@ -78,6 +78,27 @@ class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
       }
     }
   }
+
+  it should "support functional inference" in {
+    test(new Module {
+      val io = IO(new Bundle {
+        val dataIn = Input(UInt(16.W))
+        val dataOut = Output(UInt(16.W))
+        val doubleBitError = Output(Bool())
+      })
+      val eccOutput = EccCheck(EccGenerate(io.dataIn))
+      io.dataOut := eccOutput.data
+      io.doubleBitError := eccOutput.par
+    }) {
+      c =>
+        for (i <- 0 to 32) {
+          c.io.dataIn.poke(i.U)
+          c.clock.step(1)
+          c.io.dataOut.expect(i.U)
+          c.io.doubleBitError.expect(false.B)
+        }
+    }
+  }
 }
 
 object EccGenerator extends App {

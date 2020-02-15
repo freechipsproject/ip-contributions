@@ -26,3 +26,15 @@ class EccGenerate[D <: Data](data: D, doubleBit : Boolean = true) extends Module
     io.parOut.get := io.dataIn.asUInt().xorR() ^ io.eccOut.xorR()
   }
 }
+
+// Helper function for functional inference
+object EccGenerate {
+  def apply[D <: Data](x : D) : withEcc[D] = {
+    val withEccOut = Wire(new withEcc[D](x))
+    val eccGenerator = Module(new EccGenerate(x.cloneType, true))
+    withEccOut.data := x
+    withEccOut.ecc := eccGenerator.io.eccOut
+    withEccOut.par := eccGenerator.io.parOut.get
+    withEccOut
+  }
+}

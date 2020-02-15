@@ -4,6 +4,12 @@ package chisel.lib.ecc
 import chisel3._
 import chisel3.util._
 
+class withEcc[D <: Data](dat: D) extends Bundle {
+  val data = dat.cloneType
+  val ecc = UInt(calcCodeBits(dat.getWidth).W)
+  val par = Bool()
+}
+
 class EccCheck[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
   val eccBits = calcCodeBits(data.getWidth)
 
@@ -55,5 +61,17 @@ class EccCheck[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
     val computedParity = Wire(Bool())
     computedParity := io.dataIn.asUInt().xorR() ^ io.eccIn.xorR()
     io.doubleBitError.get := (io.errorSyndrome =/= 0.U) && (computedParity === io.parIn.get)
+  }
+}
+
+// Helper function for functional inference
+object EccCheck {
+  def apply[D <: Data](x : withEcc[D]) : withEcc[D] = {
+    val withEccOut = Wire(new withEcc[D](x.data))
+    val eccChecker = Module(new EccCheck(x.cloneType, true))
+    withEccOut.data := eccChecker.io.dataOut
+    withEccOut.ecc := eccChecker.io.errorSyndrome
+    withEccOut.par := eccChecker.io.doubleBitError.get
+    withEccOut
   }
 }
