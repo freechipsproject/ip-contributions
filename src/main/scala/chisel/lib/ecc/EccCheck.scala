@@ -8,6 +8,9 @@ class withEcc[D <: Data](dat: D) extends Bundle {
   val data = dat.cloneType
   val ecc = UInt(calcCodeBits(dat.getWidth).W)
   val par = Bool()
+  override def cloneType: this.type = {
+    new withEcc(dat).asInstanceOf[this.type]
+  }
 }
 
 class EccCheck[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
@@ -68,7 +71,10 @@ class EccCheck[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
 object EccCheck {
   def apply[D <: Data](x : withEcc[D]) : withEcc[D] = {
     val withEccOut = Wire(new withEcc[D](x.data))
-    val eccChecker = Module(new EccCheck(x.cloneType, true))
+    val eccChecker = Module(new EccCheck(x.data.cloneType, true))
+    eccChecker.io.dataIn := x.data
+    eccChecker.io.eccIn := x.ecc
+    eccChecker.io.parIn.get := x.par
     withEccOut.data := eccChecker.io.dataOut
     withEccOut.ecc := eccChecker.io.errorSyndrome
     withEccOut.par := eccChecker.io.doubleBitError.get

@@ -32,6 +32,7 @@ object EccGenerate {
   def apply[D <: Data](x : D) : withEcc[D] = {
     val withEccOut = Wire(new withEcc[D](x))
     val eccGenerator = Module(new EccGenerate(x.cloneType, true))
+    eccGenerator.io.dataIn := x
     withEccOut.data := x
     withEccOut.ecc := eccGenerator.io.eccOut
     withEccOut.par := eccGenerator.io.parOut.get
