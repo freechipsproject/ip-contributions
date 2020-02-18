@@ -16,6 +16,8 @@ class EccPair(width : Int) extends Module {
     val syndromeOut = Output(UInt(eccBits.W))
     val injectSecondError = Input(Bool())
     val secondErrorLocation = Input(UInt(log2Ceil(width).W))
+    val injectEccError = Input(Bool())
+    val eccErrorLocation = Input(UInt(calcCodeBits(width).W))
     val outputNotEqual = Output(Bool())
     val doubleBitError = Output(Bool())
   })
