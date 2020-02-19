@@ -15,10 +15,11 @@ the community. This is the place to do it.
 | fifo | internal | Martin Schoeberl | Variations of FIFO queues |
 | spi2wb | maven | Fabien Marteau | Drive a wishbone master bus with SPI |
 | dclib | internal | Guy Hutchison | Utility components for DecoupledIO interfaces |
+| ecc | internal | Guy Hutchison | Hamming Error-Correcting code modules |
 
 ### Getting Started
 
-To begin with you should have some working Chisel code. 
+To begin with you should have some working Chisel code.
 Adding it is designed to be as simple as possible.
 There are two main ways to go about this.
 1. Creating a new package here in the src/main/scala and src/test/scala and place your circuit and it's unit tests in those respective directories. [More about this](more-on-locally-provided-contributions)
