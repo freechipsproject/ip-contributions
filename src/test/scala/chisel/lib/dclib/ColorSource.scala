@@ -55,14 +55,16 @@ class ColorSink(colors: Int, dsz: Int) extends Module {
     val enable = Input(Bool())
     val pattern = Input(UInt(16.W))
     val color = Input(UInt(log2Ceil(colors).W))
-    val seq_error = Output(Bool())
-    val color_error = Output(Bool())
+    val seqError = Output(Bool())
+    val colorError = Output(Bool())
+    val okCount = Output(UInt(32.W))
   })
 
   val seqnum = RegInit(0.asUInt(dsz.W))
   val strobe = RegInit(0.asUInt(4.W))
   val seq_error = RegInit(false.B)
   val color_error = RegInit(false.B)
+  val okCount = RegInit(0.U(32.W))
 
   when (io.c.fire()) {
     seqnum := seqnum + 1.U
@@ -72,9 +74,13 @@ class ColorSink(colors: Int, dsz: Int) extends Module {
     when (io.c.bits.color =/= io.color) {
       color_error := true.B
     }
+    when ((io.c.bits.seqnum === seqnum) && (io.c.bits.color === io.color)) {
+      okCount := okCount + 1.U
+    }
   }
 
   io.c.ready := io.pattern(strobe)
+  io.okCount := okCount
 
   // advance the strobe whenever we accept a word or whenever
   // we are stalling
@@ -82,8 +88,8 @@ class ColorSink(colors: Int, dsz: Int) extends Module {
     strobe := strobe + 1.U
   }
 
-  io.seq_error := seq_error
-  io.color_error := color_error
+  io.seqError := seq_error
+  io.colorError := color_error
 }
 
 class LFSR16(init: Int = 1) extends Module {
