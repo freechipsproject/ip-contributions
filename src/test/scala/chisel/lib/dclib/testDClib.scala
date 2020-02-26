@@ -22,7 +22,6 @@ class DclibTester extends FlatSpec with ChiselScalatestTester with Matchers {
 
   it should "test input output" in {
     for (width <- 4 to 32) {
-      //test(new DCInputOutputTestbench(width)).withAnnotations(Seq(WriteVcdAnnotation)) {
       test(new DCInputOutputTestbench(width)) {
         c => {
           c.io.srcPat.poke(0xFFFF.U)
