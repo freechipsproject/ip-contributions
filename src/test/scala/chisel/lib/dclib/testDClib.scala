@@ -10,13 +10,13 @@ import chiseltest.experimental.TestOptionBuilder._
 import chiseltest.internal.WriteVcdAnnotation
 
 /**
- * Test behavior of dclib components
- *
- * Test operation of each component across a range of widths, and under different flow control conditions.
- * The ColorSource and ColorSink implement sequence generators and checkers.  Each generator and checker
- * takes a flow control pattern with which to assert either source flow control (Valid) or destination flow
- * control (ready).
- */
+  * Test behavior of dclib components
+  *
+  * Test operation of each component across a range of widths, and under different flow control conditions.
+  * The ColorSource and ColorSink implement sequence generators and checkers.  Each generator and checker
+  * takes a flow control pattern with which to assert either source flow control (Valid) or destination flow
+  * control (ready).
+  */
 class DclibTester extends FlatSpec with ChiselScalatestTester with Matchers {
   behavior of "Testers2"
 
