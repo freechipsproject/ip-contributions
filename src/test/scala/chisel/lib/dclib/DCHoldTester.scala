@@ -3,7 +3,7 @@ package chisel.lib.dclib
 import chisel3._
 import chisel3.iotesters.PeekPokeTester
 
-class DCHoldTestbench extends Module {
+class DCHoldTestbench(width: Int) extends Module {
   val io = IO(new Bundle {
     val srcPat = Input(UInt(16.W))
     val dstPat = Input(UInt(16.W))
@@ -12,8 +12,8 @@ class DCHoldTestbench extends Module {
     val okCount = Output(UInt(32.W))
   })
 
-  val src = Module(new ColorSource(1, 16))
-  val dst = Module(new ColorSink(1, 16))
+  val src = Module(new ColorSource(1, width))
+  val dst = Module(new ColorSink(1, width))
 
   src.io.pattern := io.srcPat
   dst.io.pattern := io.dstPat
