@@ -18,7 +18,7 @@ class DCOperator(n: Int, width: Int, op: (UInt, UInt) => UInt) extends Module {
   })
   require (n >= 2)
   val a_int = for (n <- 0 until n) yield DCInput(io.a(n))
-  val z_dcout = Module(new DCOutput(UInt(width.W)))
+  val z_dcout = DCOutput(UInt(width.W))
 
   val all_valid = a_int.map(_.valid).reduce(_ & _)
   z_dcout.io.enq.bits := a_int.map(_.bits).reduce(_ + _)
