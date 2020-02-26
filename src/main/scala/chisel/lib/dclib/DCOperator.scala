@@ -39,5 +39,6 @@ class DCOperator(n: Int, width: Int, op: (UInt, UInt) => UInt) extends Module {
 
 object CreateDcOperator extends App {
   def xor(a: UInt, b: UInt) : UInt = a ^ b
-  chisel3.Driver.execute(Array("--target-dir", "generated"), () => new DCOperator(6, 8, xor))
+  (new chisel3.stage.ChiselStage).execute(Array("--target-dir", "generated"), 
+                                          Seq(chisel3.stage.ChiselGeneratorAnnotation(() => new DCOperator(6, 8, xor)))
 }
