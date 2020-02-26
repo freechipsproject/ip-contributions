@@ -4,13 +4,13 @@ import chisel3._
 import chisel3.util._
 
 /**
- * This module declares a multi-input decoupled operator.  This is an example using showing how to use
- * DCInput and DCOutput modules to create a module with registered-output timing.
- *
- * @param n      The number of inputs for the operator
- * @param width  The bit-width of inputs and outputs
- * @param op     Function with the required operator
- */
+  * This module declares a multi-input decoupled operator.  This is an example using showing how to use
+  * [[DCInput]] and [[DCOutput]] modules to create a module with registered-output timing.
+  *
+  * @param n      The number of inputs for the operator
+  * @param width  The bit-width of inputs and outputs
+  * @param op     Function with the required operator
+  */
 class DCOperator(n: Int, width: Int, op: (UInt, UInt) => UInt) extends Module {
   val io = IO(new Bundle {
     val a = Vec(n, Flipped(Decoupled(UInt(width.W))))
