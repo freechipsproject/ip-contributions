@@ -3,7 +3,6 @@
 package chisel.lib.ecc
 
 import chisel3._
-import chisel3.util.Fill
 import chiseltest._
 import org.scalatest._
 import chiseltest.experimental.TestOptionBuilder._
