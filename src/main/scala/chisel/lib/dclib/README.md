@@ -78,15 +78,17 @@ set in the "dst" vector.  The mirror will block its input until all
 output copies have been received, and allows output copies to be received in 
 any order.
 
-### DCOperator
+### DCReduce
 
-The DCOperator module is a simple example showing how DC components can be used 
-to create a decoupled block with registered-output timing.  The DCOperator block
-takes a vector of up to N inputs and combines them with a user-provided
-operator function.
+The DCReduce module is a simple example showing how DC components can be used 
+to create a decoupled block with registered-output timing.  The DCReduce block
+takes a vector of up to N inputs and combines (reduces) them with a user-provided
+operator function.  Note that the reduction operator does not guarentee a specific
+ordering of how the reduction occurs, so the provided operator function should be
+commutative or order-independent.
 
 Because its inputs are all decoupled, the inputs can arrive in any order.
-DCOperator will produce a result once all inputs have become valid, and
+DCReduce will produce a result once all inputs have become valid, and
 hold the result until it is acknowledged ("ready" is true).
 
 ## Functional Construction

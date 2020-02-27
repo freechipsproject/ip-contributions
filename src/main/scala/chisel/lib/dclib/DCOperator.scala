@@ -7,18 +7,18 @@ import chisel3.util._
   * This module declares a multi-input decoupled operator.  This is an example using showing how to use
   * [[DCInput]] and [[DCOutput]] modules to create a module with registered-output timing.
   *
+  * @param data   Data type to operate on
   * @param n      The number of inputs for the operator
-  * @param width  The bit-width of inputs and outputs
   * @param op     Function with the required operator
   */
-class DCOperator(n: Int, width: Int, op: (UInt, UInt) => UInt) extends Module {
+class DCReduce[D <: Data](data: D, n: Int, op: (D, D) => D) extends Module {
   val io = IO(new Bundle {
-    val a = Vec(n, Flipped(Decoupled(UInt(width.W))))
-    val z = Decoupled(UInt(width.W))
+    val a = Vec(n, Flipped(Decoupled(data.cloneType)))
+    val z = Decoupled(data.cloneType)
   })
   require (n >= 2)
   val a_int = for (n <- 0 until n) yield DCInput(io.a(n))
-  val z_int = Wire(Decoupled(UInt(width.W)))
+  val z_int = Wire(Decoupled(data.cloneType))
   val z_dcout = DCOutput(z_int)
 
   val all_valid = a_int.map(_.valid).reduce(_ & _)
@@ -37,8 +37,8 @@ class DCOperator(n: Int, width: Int, op: (UInt, UInt) => UInt) extends Module {
   io.z <> z_dcout
 }
 
-object CreateDcOperator extends App {
+object CreateDcReduce extends App {
   def xor(a: UInt, b: UInt) : UInt = a ^ b
   (new chisel3.stage.ChiselStage).execute(Array("--target-dir", "generated"), 
-                                          Seq(chisel3.stage.ChiselGeneratorAnnotation(() => new DCOperator(6, 8, xor))))
+                                          Seq(chisel3.stage.ChiselGeneratorAnnotation(() => new DCReduce(UInt(8.W), n=6, op=xor))))
 }

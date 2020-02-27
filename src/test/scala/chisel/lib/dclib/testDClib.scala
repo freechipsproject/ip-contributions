@@ -95,14 +95,14 @@ class DclibTester extends FlatSpec with ChiselScalatestTester with Matchers {
   }
 }
 
-class OperatorTester extends FlatSpec with ChiselScalatestTester with Matchers {
+class ReductionTester extends FlatSpec with ChiselScalatestTester with Matchers {
   behavior of "Testers2 with Queue"
 
   it should "add numbers together" in {
     def add(a: UInt, b: UInt) : UInt = a + b
 
     for (n <- 2 to 6) {
-      test(new DCOperator(n, 8, add)).withAnnotations(Seq(WriteVcdAnnotation)) {
+      test(new DCReduce(UInt(8.W), n, add)).withAnnotations(Seq(WriteVcdAnnotation)) {
         c => {
           // clock source setup
           for (i <- 0 until n) {
