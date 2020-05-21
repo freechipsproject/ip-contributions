@@ -44,9 +44,9 @@ resolvers ++= Seq(
 
 // Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
 val defaultVersions = Map(
-  "chisel-iotesters" -> "1.3-SNAPSHOT",
-  "chiseltest"       -> "0.2-SNAPSHOT",
-  "dsptools"         -> "1.2-SNAPSHOT"
+  "chisel-iotesters" -> "1.4.1",
+  "chiseltest"       -> "0.2.1",
+  "dsptools"         -> "1.3.1"
   )
 
 libraryDependencies ++= Seq("chiseltest", "chisel-iotesters", "dsptools").map {
