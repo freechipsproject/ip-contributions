@@ -19,8 +19,9 @@ class CreditIO[D <: Data](data: D) extends Bundle {
 
 class DCCreditSender[D <: Data](data: D, maxCredit: Int) extends Module {
   val io = IO(new Bundle {
-    val enq = Flipped(new DecoupledIO(data.cloneType))
+    val enq = Flipped(Decoupled(data.cloneType))
     val deq = new CreditIO(data.cloneType)
+    val curCredit = Output(UInt(log2Ceil(maxCredit).W))
   })
   require(maxCredit >= 1)
 
@@ -36,12 +37,14 @@ class DCCreditSender[D <: Data](data: D, maxCredit: Int) extends Module {
   val validOut = RegNext(next=io.enq.fire(), init=false.B)
   io.deq.valid := validOut
   io.deq.bits := dataOut
+  io.curCredit := curCredit
 }
 
 class DCCreditReceiver[D <: Data](data: D, maxCredit: Int) extends Module {
   val io = IO(new Bundle {
     val enq = Flipped(new CreditIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
+    val fifoCount = Output(UInt(log2Ceil(maxCredit+1).W))
   })
   require(maxCredit >= 1)
 
@@ -50,6 +53,7 @@ class DCCreditReceiver[D <: Data](data: D, maxCredit: Int) extends Module {
   val outFifo = Module(new Queue(data.cloneType, maxCredit))
   outFifo.io.enq.valid := ivalid
   outFifo.io.enq.bits := idata
+  io.fifoCount := outFifo.io.count
   io.deq <> outFifo.io.deq
   val ocredit = RegNext(next=outFifo.io.deq.fire(), init=false.B)
   io.enq.credit := ocredit
