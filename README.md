@@ -17,6 +17,16 @@ the community. This is the place to do it.
 | dclib | internal | Guy Hutchison | Utility components for DecoupledIO interfaces |
 | ecc | internal | Guy Hutchison | Hamming Error-Correcting code modules |
 
+### Using ip-contributions
+
+```ip-contributions``` is published with Maven central and to use it simply add following
+line to your ```build.sbt```
+
+```
+libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.4.0"
+
+```
+
 ### Getting Started
 
 To begin with you should have some working Chisel code.
