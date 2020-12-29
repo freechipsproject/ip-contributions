@@ -128,4 +128,34 @@ class ReductionTester extends FlatSpec with ChiselScalatestTester with Matchers 
       }
     }
   }
+
+  /**
+   * This tests basic connectivity through the crossbar, but does not test performance
+   * due to the serial checking of the expectDequeueNow statement.  Attempts to use
+   * fork() to make this parallel give error messages.
+   */
+  it should "sort numbers in a crossbar" in {
+    test(new DCCrossbar(UInt(8.W), 3, 3)).withAnnotations(Seq(WriteVcdAnnotation)) {
+      c => {
+        for (i <- 0 to 2) {
+          c.io.c(i).initSource().setSourceClock(c.clock)
+          c.io.p(i).initSink().setSinkClock(c.clock)
+          c.io.sel(i).poke( ((i+1) % 3).U)
+        }
+        for (i <- 0 to 2) {
+          val sendSeq = for (j <- 0 to 2) yield j.U(8.W)
+          fork {
+            c.io.c(i).enqueueSeq(sendSeq)
+          }
+        }
+        for (i <- 0 to 2) {
+          for (j <- 0 to 2) {
+            c.io.p(j).expectDequeueNow(i.U)
+          }
+          //val expSeq = for (j <- 0 to 2) yield i.U(8.W)
+          //c.io.p(i).expectDequeueSeq(expSeq)
+        }
+      }
+    }
+  }
 }
