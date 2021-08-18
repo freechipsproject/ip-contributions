@@ -3,6 +3,7 @@
 package chisel.lib.cordic.iterative
 
 import chisel3._
+import chisel3.stage.ChiselStage
 
 /**
   * Make an unapply function for the argument parser.
@@ -62,5 +63,5 @@ object CordicApp extends App {
   )
   val (chiselArgs, params) = argParse(args.toList, defaultParams)
   // Run the Chisel driver to generate a cordic
-  Driver.execute(chiselArgs.toArray, () => new IterativeCordic(params))
+  (new ChiselStage).emitSystemVerilog(new IterativeCordic(params), chiselArgs.toArray)
 }

@@ -1,0 +1,26 @@
+name: Chisel IP Contribution Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Verilator
+      run: |
+        sudo apt-get install -y verilator
+        verilator --version
+
+    - name: Setup Scala
+      uses: olafurpg/setup-scala@v11
+      with:
+        java-version: openjdk@1.11
+
+    - name: Compile
+      run: sbt compile
+
+    - name: Unit Tests
+      run: sbt test

@@ -4,7 +4,7 @@ package chisel.lib.bitonicsorter
 
 import chisel3._
 import chisel3.iotesters._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
 
 //scalastyle:off magic.number
 
@@ -19,12 +19,12 @@ import org.scalatest.{FlatSpec, Matchers}
 class RandomSorterTest[T <: UInt](
   val numExamples : Int,
   factory : () => SorterModuleIfc[T]
-) extends FlatSpec with Matchers {
+) extends AnyFlatSpec {
 
   behavior of "SorterTest"
 
   it should "work" in {
-    chisel3.iotesters.Driver( factory, "treadle") { c =>
+    assert(chisel3.iotesters.Driver( factory, "treadle") { c =>
       new PeekPokeTester( c) {
         def example( a:IndexedSeq[BigInt]) {
           poke( c.io.a, a)
@@ -38,7 +38,7 @@ class RandomSorterTest[T <: UInt](
         }
 
       }
-    } should be (true)
+    })
   }
 }
 

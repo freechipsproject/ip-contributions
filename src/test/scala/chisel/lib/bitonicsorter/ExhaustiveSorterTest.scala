@@ -4,18 +4,18 @@ package chisel.lib.bitonicsorter
 
 import chisel3._
 import chisel3.iotesters._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Test generator that tests all possible input patterns
   * @param factory The generator
   * @tparam T      The type of elements
   */
-class ExhaustiveSorterTest[T <: Bool]( factory : () => SorterModuleIfc[T]) extends FlatSpec with Matchers {
+class ExhaustiveSorterTest[T <: Bool]( factory : () => SorterModuleIfc[T]) extends AnyFlatSpec {
   behavior of "SorterTest"
 
   it should "work" in {
-    chisel3.iotesters.Driver( factory, "treadle") { c =>
+    assert(chisel3.iotesters.Driver( factory, "treadle") { c =>
       new PeekPokeTester( c) {
         def example( a:IndexedSeq[BigInt]) {
           poke( c.io.a, a)
@@ -33,7 +33,7 @@ class ExhaustiveSorterTest[T <: Bool]( factory : () => SorterModuleIfc[T]) exten
         }
 
       }
-    } should be (true)
+    })
   }
 }
 

@@ -5,9 +5,7 @@ package chisel.lib.dclib
 
 import chisel3._
 import chiseltest._
-import org.scalatest._
-import chiseltest.experimental.TestOptionBuilder._
-import chiseltest.internal.WriteVcdAnnotation
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Test behavior of dclib components
@@ -17,7 +15,7 @@ import chiseltest.internal.WriteVcdAnnotation
   * takes a flow control pattern with which to assert either source flow control (Valid) or destination flow
   * control (ready).
   */
-class DclibTester extends FlatSpec with ChiselScalatestTester with Matchers {
+class DclibTester extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "Testers2"
 
   it should "test input output" in {
@@ -95,7 +93,7 @@ class DclibTester extends FlatSpec with ChiselScalatestTester with Matchers {
   }
 }
 
-class ReductionTester extends FlatSpec with ChiselScalatestTester with Matchers {
+class ReductionTester extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "Testers2 with Queue"
 
   it should "add numbers together" in {
