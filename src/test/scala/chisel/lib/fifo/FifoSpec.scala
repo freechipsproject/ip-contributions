@@ -5,7 +5,7 @@ package chisel.lib.fifo
 
 import chisel3._
 import chisel3.iotesters.PeekPokeTester
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
 
 
 object FifoTester {
@@ -87,41 +87,41 @@ class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
   assert(cycles >= 0.99, "Cannot be faster than one clock cycle per word")
 }
 
-class FifoSpec extends FlatSpec with Matchers {
+class FifoSpec extends AnyFlatSpec {
 
   "BubbleFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(FifoTester.param,
+    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new BubbleFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
-    } should be (true)
+    })
   }
 
   "DoubleBufferFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(FifoTester.param,
+    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new DoubleBufferFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
-    } should be (true)
+    })
   }
 
   "RegFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(FifoTester.param,
+    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new RegFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
-    } should be (true)
+    })
   }
 
   "MemFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(FifoTester.param,
+    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new MemFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
-    } should be (true)
+    })
   }
 
   "CombFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(FifoTester.param,
+    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new CombFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
-    } should be (true)
+    })
   }
 
 }

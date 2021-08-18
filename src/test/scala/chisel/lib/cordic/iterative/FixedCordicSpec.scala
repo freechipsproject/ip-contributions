@@ -3,11 +3,11 @@
 package chisel.lib.cordic.iterative
 
 import dsptools.numbers._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.math.{ceil, max}
 
-class FixedCordicSpec extends FlatSpec with Matchers {
+class FixedCordicSpec extends AnyFlatSpec {
   behavior of "FixedIterativeCordic"
 
   val params = FixedCordicParams(
@@ -20,13 +20,13 @@ class FixedCordicSpec extends FlatSpec with Matchers {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=false)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(zin = phi, xout = Some(math.cos(phi)), yout = Some(math.sin(phi)), zout = Some(0)) }
-    FixedCordicTester(params, trials) should be (true)
+    assert(FixedCordicTester(params, trials))
   }
   it should "vector" in {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=true)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(xin = math.cos(phi), yin = math.sin(phi), xout = Some(1), yout = Some(0), zout = Some(phi)) }
-    FixedCordicTester(params, trials) should be (true)
+    assert(FixedCordicTester(params, trials))
   }
 
   // No gain tests.
@@ -43,13 +43,13 @@ class FixedCordicSpec extends FlatSpec with Matchers {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=false)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(zin = phi, xout = Some(math.cos(phi)*gainCor), yout = Some(math.sin(phi)*gainCor), zout = Some(0)) }
-    FixedCordicTester(paramsNoGain, trials) should be (true)
+    assert(FixedCordicTester(paramsNoGain, trials))
   }
   it should "vector without gain correction" in {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=true)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(xin = math.cos(phi), yin = math.sin(phi), xout = Some(gainCor), yout = Some(0), zout = Some(phi)) }
-    FixedCordicTester(paramsNoGain, trials) should be (true)
+    assert(FixedCordicTester(paramsNoGain, trials))
   }
 
 
@@ -67,13 +67,13 @@ class FixedCordicSpec extends FlatSpec with Matchers {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=false)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(zin = phi, xout = Some(math.cos(phi)), yout = Some(math.sin(phi)), zout = Some(0)) }
-    RealCordicTester(realParams, trials) should be (true)
+    assert(RealCordicTester(realParams, trials))
   }
   it should "vector" in {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=true)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(xin = math.cos(phi), yin = math.sin(phi), xout = Some(1), yout = Some(0), zout = Some(phi)) }
-    RealCordicTester(realParams, trials) should be (true)
+    assert(RealCordicTester(realParams, trials))
   }
 
   // No gain tests.
@@ -91,13 +91,13 @@ class FixedCordicSpec extends FlatSpec with Matchers {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=false)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(zin = phi, xout = Some(math.cos(phi)*gainCor), yout = Some(math.sin(phi)*gainCor), zout = Some(0)) }
-    RealCordicTester(realParamsNoGain, trials) should be (true)
+    assert(RealCordicTester(realParamsNoGain, trials))
   }
   it should "vector without gain correction" in {
     val baseTrial = XYZ(xin= 1.0, yin=0.0, zin=0.0, vectoring=true)
     val angles = Seq(-3, -2, -1, -0.5, 0, 0.25, 0.5, 1, 2, 3)
     val trials = angles.map { phi => baseTrial.copy(xin = math.cos(phi), yin = math.sin(phi), xout = Some(gainCor), yout = Some(0), zout = Some(phi)) }
-    RealCordicTester(realParamsNoGain, trials) should be (true)
+    assert(RealCordicTester(realParamsNoGain, trials))
   }
 
 }

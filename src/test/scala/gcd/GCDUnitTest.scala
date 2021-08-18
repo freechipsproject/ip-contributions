@@ -114,18 +114,4 @@ class GCDTester extends ChiselFlatSpec {
     new File("test_run_dir/make_a_vcd/make_a_vcd.vcd").exists should be (true)
   }
 
-  "running with --generate-vcd-output off" should "not create a vcd file from your test" in {
-    iotesters.Driver.execute(
-      Array("--generate-vcd-output", "off", "--target-dir", "test_run_dir/make_no_vcd", "--top-name", "make_no_vcd",
-      "--backend-name", "verilator"),
-      () => new GCD
-    ) {
-
-      c => new GCDUnitTester(c)
-    } should be(true)
-
-    new File("test_run_dir/make_no_vcd/make_a_vcd.vcd").exists should be (false)
-
-  }
-
 }

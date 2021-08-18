@@ -3,14 +3,13 @@
 package chisel.lib.ecc
 
 import chisel3._
+import chisel3.stage.ChiselStage
 import chiseltest._
-import org.scalatest._
-import chiseltest.experimental.TestOptionBuilder._
-import chiseltest.internal.WriteVcdAnnotation
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Random
 
-class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
+class EccTester extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "Testers2"
 
   it should "send data without errors" in {
@@ -155,5 +154,5 @@ class EccTester extends FlatSpec with ChiselScalatestTester with Matchers {
 }
 
 object EccGenerator extends App {
-  chisel3.Driver.execute(Array("--target-dir", "generated"), () => new EccCheck(UInt(8.W)))
+  (new ChiselStage).emitSystemVerilog(new EccCheck(UInt(8.W)), Array("--target-dir", "generated"))
 }

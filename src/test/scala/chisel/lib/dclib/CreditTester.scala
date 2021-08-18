@@ -3,9 +3,7 @@ package chisel.lib.dclib
 import chisel3._
 import chisel3.util._
 import chiseltest._
-import org.scalatest._
-import chiseltest.experimental.TestOptionBuilder._
-import chiseltest.internal.WriteVcdAnnotation
+import org.scalatest.flatspec.AnyFlatSpec
 
 class CreditHarness(delay : Int, maxCredit : Int) extends Module {
   val io = IO(new Bundle {
@@ -45,7 +43,7 @@ class CreditHarness(delay : Int, maxCredit : Int) extends Module {
   io.backpressured := backpressured
 }
 
-class CreditTester extends FlatSpec with ChiselScalatestTester with Matchers {
+class CreditTester extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "Testers2 with Queue"
 
   it should "test fixed credit with variable delay" in {
