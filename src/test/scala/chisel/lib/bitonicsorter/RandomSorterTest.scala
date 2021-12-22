@@ -3,7 +3,8 @@
 package chisel.lib.bitonicsorter
 
 import chisel3._
-import chisel3.iotesters._
+import chiseltest._
+import chiseltest.iotesters.PeekPokeTester
 import org.scalatest.flatspec.AnyFlatSpec
 
 //scalastyle:off magic.number
@@ -19,12 +20,13 @@ import org.scalatest.flatspec.AnyFlatSpec
 class RandomSorterTest[T <: UInt](
   val numExamples : Int,
   factory : () => SorterModuleIfc[T]
-) extends AnyFlatSpec {
+) extends AnyFlatSpec with ChiselScalatestTester {
+  private val rnd = new scala.util.Random()
 
   behavior of "SorterTest"
 
   it should "work" in {
-    assert(chisel3.iotesters.Driver( factory, "treadle") { c =>
+    test(factory()).runPeekPoke { c =>
       new PeekPokeTester( c) {
         def example( a:IndexedSeq[BigInt]) {
           poke( c.io.a, a)
@@ -38,7 +40,7 @@ class RandomSorterTest[T <: UInt](
         }
 
       }
-    })
+    }
   }
 }
 
