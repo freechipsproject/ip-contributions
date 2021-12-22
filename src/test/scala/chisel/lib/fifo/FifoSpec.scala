@@ -4,124 +4,115 @@
 package chisel.lib.fifo
 
 import chisel3._
-import chisel3.iotesters.PeekPokeTester
+import chiseltest._
+import firrtl.AnnotationSeq
 import org.scalatest.flatspec.AnyFlatSpec
 
-
-object FifoTester {
-  val param = Array("--target-dir", "generated", "--generate-vcd-output", "on")
-}
 
 /**
   * Testing FIFO queue variations
   */
-class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
+object testFifo {
 
-  // some defaults for all signals
-  poke(dut.io.enq.bits.asUInt(), 0xab)
-  poke(dut.io.enq.valid, 0)
-  poke(dut.io.deq.ready, 0)
-  step(1)
-  var ready = peek(dut.io.enq.ready)
-  var valid = peek(dut.io.deq.valid)
-  // write one value and expect it on the deq side
-  poke(dut.io.enq.bits.asUInt(), 0x123)
-  poke(dut.io.enq.valid, 1)
-  step(1)
-  poke(dut.io.enq.bits.asUInt(), 0xab)
-  poke(dut.io.enq.valid, 0)
-  step(12)
-  expect(dut.io.enq.ready, 1)
-  expect(dut.io.deq.valid, 1)
-  expect(dut.io.deq.bits.asUInt(), 0x123)
-  // read it out
-  poke(dut.io.deq.ready, 1)
-  step(1)
-  expect(dut.io.deq.valid, 0)
-  poke(dut.io.deq.ready, 0)
-  step(1)
-  // file the whole buffer
-  // TODO: how do I access the parameter depth from the dut?
-  var cnt = 1
-  // we are always valid
-  poke(dut.io.enq.valid, 1)
-  for (i <- 0 until 12) {
-    poke(dut.io.enq.bits.asUInt(), cnt.U)
-    if (peek(dut.io.enq.ready) != 0) {
-      cnt += 1
-    }
-    step(1)
-  }
-  println(s"Wrote ${cnt-1} words")
-  expect(dut.io.enq.ready, 0)
-  expect(dut.io.deq.valid, 1)
-  expect(dut.io.deq.bits.asUInt(), 1)
-
-  // now read it back
-  var expected = 1
-  // no new input
-  poke(dut.io.enq.valid, 0)
-  // always ready on the reader side
-  poke(dut.io.deq.ready, 1)
-  for (i <- 0 until 12) {
-    if (peek(dut.io.deq.valid) != 0) {
-      expect(dut.io.deq.bits.asUInt(), expected)
-      expected += 1
-    }
-    step(1)
+  private def initIO(dut: Fifo[UInt]): Unit = {
+    dut.io.enq.bits.poke(0xab.U)
+    dut.io.enq.valid.poke(false.B)
+    dut.io.deq.ready.poke(false.B)
   }
 
-  // Do the speed test
-  poke(dut.io.enq.valid, 1)
-  poke(dut.io.deq.ready, 1)
-  cnt = 0
-  for (i <- 0 until 100) {
-    poke(dut.io.enq.bits.asUInt(), i.U)
-    if (peek(dut.io.enq.ready) != 0) {
-      cnt += 1
+  private def push(dut: Fifo[UInt], value: BigInt): Unit = {
+    dut.io.enq.bits.poke(value.U)
+    dut.io.enq.valid.poke(true.B)
+    // wait for slot to become available
+    while(!dut.io.enq.ready.peek().litToBoolean) {
+      dut.clock.step()
     }
-    step(1)
+    dut.clock.step()
+    dut.io.enq.bits.poke(0xab.U) // overwrite with default value
+    dut.io.enq.valid.poke(false.B)
   }
-  val cycles = 100.0 / cnt
-  println(s"$cnt words in 100 clock cycles, $cycles clock cycles per word")
-  assert(cycles >= 0.99, "Cannot be faster than one clock cycle per word")
+
+  private def pop(dut: Fifo[UInt], value: BigInt): Unit = {
+    // wait for value to become available
+    while(!dut.io.deq.valid.peek().litToBoolean) {
+      dut.clock.step()
+    }
+    // check value
+    dut.io.deq.valid.expect(true.B)
+    dut.io.deq.bits.expect(value.U)
+    // read it out
+    dut.io.deq.ready.poke(true.B)
+    dut.clock.step()
+    dut.io.deq.ready.poke(false.B)
+  }
+
+  private def speedTest(dut: Fifo[UInt]): (Int, Double) = {
+    dut.io.enq.valid.poke(true.B)
+    dut.io.deq.ready.poke(true.B)
+    var cnt = 0
+    for (i <- 0 until 100) {
+      dut.io.enq.bits.poke(i.U)
+      if(dut.io.enq.ready.peek().litToBoolean) {
+        cnt += 1
+      }
+      dut.clock.step()
+    }
+    (cnt, 100.0 / cnt)
+  }
+
+  def apply(dut: Fifo[UInt]): Unit = {
+    // some defaults for all signals
+    initIO(dut)
+    dut.clock.step()
+
+    // write one value and expect it on the deq side
+    push(dut, 0x123)
+    dut.clock.step(12)
+    dut.io.enq.ready.expect(true.B)
+    pop(dut, 0x123)
+    dut.io.deq.valid.expect(false.B)
+    dut.clock.step()
+
+    // file the whole buffer
+    (0 until dut.depth).foreach { i => push(dut, i + 1) }
+
+    dut.clock.step()
+    dut.io.enq.ready.expect(false.B, "fifo should be full")
+    dut.io.deq.valid.expect(true.B, "fifo should have data available to dequeue")
+    dut.io.deq.bits.expect(1.U, "the first entry should be 1")
+
+    // now read it back
+    (0 until dut.depth).foreach { i => pop(dut, i + 1) }
+
+    // Do the speed test
+    val (cnt, cycles) = speedTest(dut)
+    println(s"$cnt words in 100 clock cycles, $cycles clock cycles per word")
+    assert(cycles >= 0.99, "Cannot be faster than one clock cycle per word")
+  }
 }
 
-class FifoSpec extends AnyFlatSpec {
+class FifoSpec extends AnyFlatSpec with ChiselScalatestTester {
+  private val defaultOptions: AnnotationSeq = Seq(WriteVcdAnnotation)
+
 
   "BubbleFifo" should "pass" in {
-    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
-      () => new BubbleFifo(UInt(16.W), 4)) { c =>
-      new FifoTester(c)
-    })
+    test(new BubbleFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
 
   "DoubleBufferFifo" should "pass" in {
-    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
-      () => new DoubleBufferFifo(UInt(16.W), 4)) { c =>
-      new FifoTester(c)
-    })
+    test(new DoubleBufferFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
 
   "RegFifo" should "pass" in {
-    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
-      () => new RegFifo(UInt(16.W), 4)) { c =>
-      new FifoTester(c)
-    })
+    test(new RegFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
 
   "MemFifo" should "pass" in {
-    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
-      () => new MemFifo(UInt(16.W), 4)) { c =>
-      new FifoTester(c)
-    })
+    test(new MemFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
 
   "CombFifo" should "pass" in {
-    assert(chisel3.iotesters.Driver.execute(FifoTester.param,
-      () => new CombFifo(UInt(16.W), 4)) { c =>
-      new FifoTester(c)
-    })
+    test(new CombFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
 
 }
