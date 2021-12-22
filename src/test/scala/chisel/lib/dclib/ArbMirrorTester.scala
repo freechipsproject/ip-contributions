@@ -2,7 +2,6 @@ package chisel.lib.dclib
 
 import chisel3._
 import chisel3.util._
-import chisel3.iotesters.PeekPokeTester
 
 class ArbMirrorTestbench(ways: Int) extends Module {
   val io = IO(new Bundle {
