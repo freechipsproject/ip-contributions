@@ -14,8 +14,8 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   def counter(depth: Int, incr: Bool): (UInt, UInt) = {
     val cntReg = RegInit(0.U(log2Ceil(depth).W))
-    val nextVal = Mux(cntReg === (depth-1).U, 0.U, cntReg + 1.U)
-    when (incr) {
+    val nextVal = Mux(cntReg === (depth - 1).U, 0.U, cntReg + 1.U)
+    when(incr) {
       cntReg := nextVal
     }
     (cntReg, nextVal)
@@ -35,7 +35,7 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
   val stateReg = RegInit(idle)
   val shadowReg = Reg(gen)
 
-  when (io.enq.valid && !fullReg) {
+  when(io.enq.valid && !fullReg) {
     mem.write(writePtr, io.enq.bits)
     emptyReg := false.B
     fullReg := nextWrite === readPtr
@@ -61,10 +61,10 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
           fullReg := false.B
           emptyReg := nextRead === writePtr
           incrRead := true.B
-        } otherwise {
+        }.otherwise {
           stateReg := idle
         }
-      } otherwise {
+      }.otherwise {
         shadowReg := data
         stateReg := full
       }
@@ -77,7 +77,7 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
           fullReg := false.B
           emptyReg := nextRead === writePtr
           incrRead := true.B
-        } otherwise {
+        }.otherwise {
           stateReg := idle
         }
 
@@ -85,7 +85,7 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     }
   }
 
-  io.deq.bits :=  Mux(stateReg === valid, data, shadowReg)
+  io.deq.bits := Mux(stateReg === valid, data, shadowReg)
   io.enq.ready := !fullReg
   io.deq.valid := stateReg === valid || stateReg === full
 }

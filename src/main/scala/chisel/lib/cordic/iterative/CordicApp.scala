@@ -19,7 +19,6 @@ object Int {
   }
 }
 
-
 /**
   * Define entry point for CORDIC generator
   */
@@ -31,12 +30,12 @@ object CordicApp extends App {
                  |--noCorrectGain\t\tDon't correct gain
                  |--stagesPerCycle <Int>\t\tStages to use per cycle
                  |""".stripMargin
+
   /**
     * Parse arguments
     *
     * Some arguments are used by the cordic generator and are used to construct a FixedCordicParams object.
     * The rest get returned as a List[String] to pass to the Chisel driver
-    *
     */
   def argParse(args: List[String], params: FixedCordicParams): (List[String], FixedCordicParams) = {
     args match {
@@ -44,10 +43,10 @@ object CordicApp extends App {
         println(usage)
         val (newArgs, newParams) = argParse(tail, params)
         ("--help" +: newArgs, newParams)
-      case "--xy" :: Int(xy) :: tail => argParse(tail, params.copy(xyWidth = xy))
-      case "--z" :: Int(z) :: tail => argParse(tail, params.copy(zWidth = z))
-      case "--correctGain" :: tail => argParse(tail, params.copy(correctGain = true))
-      case "--noCorrectGain" :: tail => argParse(tail, params.copy(correctGain = false))
+      case "--xy" :: Int(xy) :: tail              => argParse(tail, params.copy(xyWidth = xy))
+      case "--z" :: Int(z) :: tail                => argParse(tail, params.copy(zWidth = z))
+      case "--correctGain" :: tail                => argParse(tail, params.copy(correctGain = true))
+      case "--noCorrectGain" :: tail              => argParse(tail, params.copy(correctGain = false))
       case "--stagesPerCycle" :: Int(spc) :: tail => argParse(tail, params.copy(stagesPerCycle = spc))
       case chiselOpt :: tail => {
         val (newArgs, newParams) = argParse(tail, params)

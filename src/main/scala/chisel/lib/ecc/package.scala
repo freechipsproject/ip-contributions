@@ -5,7 +5,7 @@ import scala.collection.immutable.Map
 import scala.collection.mutable.ListBuffer
 
 package object ecc {
-  def pow2(x : Int) : Int = {
+  def pow2(x: Int): Int = {
     if (x == 0) {
       1
     } else {
@@ -14,7 +14,7 @@ package object ecc {
     //scala.math.ceil(scala.math.pow(2, x)).toInt
   }
 
-  def calcCodeBits(dataBits : Int) : Int = {
+  def calcCodeBits(dataBits: Int): Int = {
     var m = 1
     var c = 0
     while (c < dataBits) {
@@ -24,31 +24,30 @@ package object ecc {
     m
   }
 
-  def calcBitMapping(dataBits: Int, reversed : Boolean) : Map[Int, Int] = {
+  def calcBitMapping(dataBits: Int, reversed: Boolean): Map[Int, Int] = {
     val outWidth = dataBits + calcCodeBits(dataBits)
-    var power : Int = 0
+    var power: Int = 0
     var mapping1 = new ListBuffer[Int]()
     var mapping2 = new ListBuffer[Int]()
 
-    for (i <- 1 until outWidth+1) {
+    for (i <- 1 until outWidth + 1) {
       if (pow2(power) == i)
         power += 1
       else {
-        mapping1 += (i-1)
-        mapping2 += (i-power-1)
+        mapping1 += (i - 1)
+        mapping2 += (i - power - 1)
       }
     }
 
-    if (reversed)
-      (mapping2 zip mapping1).toMap
+    if (reversed)(mapping2.zip(mapping1)).toMap
     else
-      (mapping1 zip mapping2).toMap
+      (mapping1.zip(mapping2)).toMap
   }
 
-  def buildSeq(bitNum : Int, outWidth: Int) : List[Int] = {
+  def buildSeq(bitNum: Int, outWidth: Int): List[Int] = {
     var bitIndex = new ListBuffer[Int]()
     var cur = 0
-    var skip = pow2(bitNum)-1
+    var skip = pow2(bitNum) - 1
     var check = 0
 
     if (skip == 0)
@@ -58,7 +57,7 @@ package object ecc {
 
     while (cur < outWidth) {
       if (check > 0) {
-        if (cur != pow2(bitNum)-1)
+        if (cur != pow2(bitNum) - 1)
           bitIndex += cur
         check -= 1
         if (check == 0)

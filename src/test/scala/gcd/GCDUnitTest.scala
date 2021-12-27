@@ -7,22 +7,21 @@ import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
- * compute the gcd and the number of steps it should take to do it
- *
- * @param a positive integer
- * @param b positive integer
- * @return the GCD of a and b
- */
+  * compute the gcd and the number of steps it should take to do it
+  *
+  * @param a positive integer
+  * @param b positive integer
+  * @return the GCD of a and b
+  */
 object computeGcd {
   def apply(a: Int, b: Int): (Int, Int) = {
     var x = a
     var y = b
     var depth = 1
-    while(y > 0 ) {
+    while (y > 0) {
       if (x > y) {
         x -= y
-      }
-      else {
+      } else {
         y -= x
       }
       depth += 1
@@ -44,7 +43,7 @@ object computeGcd {
   */
 class GCDTester extends AnyFlatSpec with ChiselScalatestTester {
   private def doTest(gcd: GCD): Unit = {
-    for(i <- 1 to 40 by 3) {
+    for (i <- 1 to 40 by 3) {
       for (j <- 1 to 40 by 7) {
         gcd.io.value1.poke(i.U)
         gcd.io.value2.poke(j.U)

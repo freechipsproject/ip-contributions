@@ -3,7 +3,7 @@ package chisel.lib.dclib
 import chisel3._
 import chisel3.util._
 
-class PktToken(asz: Int, cycsz: Int=16) extends Bundle {
+class PktToken(asz: Int, cycsz: Int = 16) extends Bundle {
   val src = UInt(asz.W)
   val dst = UInt(asz.W)
   val cycle = UInt(cycsz.W)
@@ -30,7 +30,7 @@ class ColorSource(colors: Int, dsz: Int) extends Module {
   val seqnum = RegInit(0.asUInt(dsz.W))
   val strobe = RegInit(0.asUInt(4.W))
 
-  when (io.p.fire()) {
+  when(io.p.fire()) {
     seqnum := seqnum + 1.U
   }
 
@@ -38,7 +38,7 @@ class ColorSource(colors: Int, dsz: Int) extends Module {
 
   // advance the strobe whenever we are not providing data or when it
   // is accepted
-  when (io.p.ready || !io.pattern(strobe)) {
+  when(io.p.ready || !io.pattern(strobe)) {
     strobe := strobe + 1.U
   }
   io.p.bits.color := io.color
@@ -66,15 +66,15 @@ class ColorSink(colors: Int, dsz: Int) extends Module {
   val color_error = RegInit(false.B)
   val okCount = RegInit(0.U(32.W))
 
-  when (io.c.fire()) {
+  when(io.c.fire()) {
     seqnum := seqnum + 1.U
-    when (io.c.bits.seqnum =/= seqnum) {
+    when(io.c.bits.seqnum =/= seqnum) {
       seq_error := true.B
     }
-    when (io.c.bits.color =/= io.color) {
+    when(io.c.bits.color =/= io.color) {
       color_error := true.B
     }
-    when ((io.c.bits.seqnum === seqnum) && (io.c.bits.color === io.color)) {
+    when((io.c.bits.seqnum === seqnum) && (io.c.bits.color === io.color)) {
       okCount := okCount + 1.U
     }
   }
@@ -84,7 +84,7 @@ class ColorSink(colors: Int, dsz: Int) extends Module {
 
   // advance the strobe whenever we accept a word or whenever
   // we are stalling
-  when (io.c.valid || !io.pattern(strobe)) {
+  when(io.c.valid || !io.pattern(strobe)) {
     strobe := strobe + 1.U
   }
 
@@ -98,14 +98,14 @@ class LFSR16(init: Int = 1) extends Module {
     val out = Output(UInt(16.W))
   })
   val res = RegInit(init.U(16.W))
-  when (io.inc) {
-    val nxt_res = Cat(res(0)^res(2)^res(3)^res(5), res(15,1))
+  when(io.inc) {
+    val nxt_res = Cat(res(0) ^ res(2) ^ res(3) ^ res(5), res(15, 1))
     res := nxt_res
   }
   io.out := res
 }
 
-class PktTokenSource(asz: Int, cycsz: Int=16, id: Int=0) extends Module {
+class PktTokenSource(asz: Int, cycsz: Int = 16, id: Int = 0) extends Module {
   val io = IO(new Bundle {
     val p = Decoupled(new PktToken(asz, cycsz))
     val enable = Input(Bool())
@@ -124,7 +124,7 @@ class PktTokenSource(asz: Int, cycsz: Int=16, id: Int=0) extends Module {
   cycle := cycle + 1.U
   io.cum_delay := cum_delay
 
-  when (io.p.fire() || !io.pattern(strobe)) {
+  when(io.p.fire() || !io.pattern(strobe)) {
     strobe := strobe + 1.U
   }
   ohold.io.enq.valid := io.pattern(strobe)
@@ -134,12 +134,12 @@ class PktTokenSource(asz: Int, cycsz: Int=16, id: Int=0) extends Module {
 
   io.p <> ohold.io.deq
 
-  when (io.p.valid && !io.p.ready) {
+  when(io.p.valid && !io.p.ready) {
     cum_delay := cum_delay + 1.U
   }
 }
 
-class PktTokenSink(asz: Int, cycsz: Int=16, id: Int=0) extends Module {
+class PktTokenSink(asz: Int, cycsz: Int = 16, id: Int = 0) extends Module {
   val io = IO(new Bundle {
     val c = Flipped(Decoupled(new PktToken(asz, cycsz)))
     val enable = Input(Bool())
@@ -160,14 +160,14 @@ class PktTokenSink(asz: Int, cycsz: Int=16, id: Int=0) extends Module {
   cycle := cycle + 1.U
 
   c_hold.ready := io.pattern(strobe)
-  when (c_hold.fire() || !io.pattern(strobe)) {
+  when(c_hold.fire() || !io.pattern(strobe)) {
     strobe := strobe + 1.U
   }
 
-  when (c_hold.fire()) {
+  when(c_hold.fire()) {
     cum_latency := cum_latency + (cycle - c_hold.bits.cycle)
     pkt_count := pkt_count + 1.U
-    when (c_hold.bits.dst =/= id.U) {
+    when(c_hold.bits.dst =/= id.U) {
       addr_error := true.B
     }
   }

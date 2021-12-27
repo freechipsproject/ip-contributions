@@ -60,7 +60,7 @@ class UartRxTests extends AnyFlatSpec with ChiselScalatestTester {
       }
       // stop bit
       dut.io.rxd.poke(1.U)
-      while(!dut.io.channel.valid.peek().litToBoolean) {
+      while (!dut.io.channel.valid.peek().litToBoolean) {
         // wait on valid
         dut.clock.step(1)
       }

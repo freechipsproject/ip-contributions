@@ -19,8 +19,7 @@ case class XYZ(
   // if Some(...), check that the result matches
   xout: Option[Double] = None,
   yout: Option[Double] = None,
-  zout: Option[Double] = None
-)
+  zout: Option[Double] = None)
 
 /**
   * DspTester for FixedIterativeCordic
@@ -75,11 +74,8 @@ class CordicTester[T <: chisel3.Data](c: IterativeCordic[T], trials: Seq[XYZ], t
 
 object FixedCordicTester {
   def apply(params: FixedCordicParams, trials: Seq[XYZ]): Boolean = {
-    dsptools.Driver.execute(
-      () => new IterativeCordic(params),
-      Array("-tbn", "firrtl", "-fiwv"))
-    {
-      c => new CordicTester(c, trials)
+    dsptools.Driver.execute(() => new IterativeCordic(params), Array("-tbn", "firrtl", "-fiwv")) { c =>
+      new CordicTester(c, trials)
     }
   }
 }
@@ -89,8 +85,8 @@ object RealCordicTester {
     dsptools.Driver.execute(
       () => new IterativeCordic(params),
       Array("--backend-name", "verilator", "-fiwv", "-rtdec", "6")
-    ) {
-      c => new CordicTester(c, trials)
+    ) { c =>
+      new CordicTester(c, trials)
     }
   }
 }

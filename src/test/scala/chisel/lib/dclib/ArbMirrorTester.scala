@@ -11,8 +11,8 @@ class ArbMirrorTestbench(ways: Int) extends Module {
     val seqError = Output(Bool())
   })
 
-  val arb = Module(new DCArbiter(new ColorToken(ways,16), ways, false))
-  val mir = Module(new DCMirror(new ColorToken(ways,16), ways))
+  val arb = Module(new DCArbiter(new ColorToken(ways, 16), ways, false))
+  val mir = Module(new DCMirror(new ColorToken(ways, 16), ways))
   val i_color_error = Wire(Vec(ways, Bool()))
   val i_seq_error = Wire(Vec(ways, Bool()))
 

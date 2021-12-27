@@ -10,12 +10,12 @@ import org.scalatest.flatspec.AnyFlatSpec
 import scala.util.Random
 
 class EccTester extends AnyFlatSpec with ChiselScalatestTester {
-  behavior of "Testers2"
+  behavior.of("Testers2")
 
   it should "send data without errors" in {
     for (width <- 4 to 30) {
-      test(new EccPair(width = width)) {
-        c => {
+      test(new EccPair(width = width)) { c =>
+        {
           val rnd = new Random()
           for (i <- 0 to 20) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
@@ -36,8 +36,8 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
 
   it should "correct single bit errors" in {
     for (width <- 4 to 30) {
-      test(new EccPair(width = width)) {
-        c => {
+      test(new EccPair(width = width)) { c =>
+        {
           val rnd = new Random()
           for (i <- 0 to c.getWidthParam) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
@@ -59,8 +59,8 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
 
   it should "correct single-bit ecc errors" in {
     for (width <- 4 to 30) {
-      test(new EccPair(width = width)) {
-        c => {
+      test(new EccPair(width = width)) { c =>
+        {
           val rnd = new Random()
           for (i <- 0 to calcCodeBits(width)) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
@@ -82,8 +82,8 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
 
   it should "support wide values" in {
     for (width <- Seq(48, 64, 96, 128, 256)) {
-      test(new EccPair(width = width)) {
-        c => {
+      test(new EccPair(width = width)) { c =>
+        {
           val rnd = new Random()
           for (i <- 0 to c.getWidthParam) {
             val testVal = rnd.nextInt(256)
@@ -110,8 +110,8 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
 
   it should "detect double bit errors" in {
     for (width <- 4 to 30) {
-      test(new EccPair(width = width)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new EccPair(width = width)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           val rnd = new Random()
           for (i <- 0 to c.getWidthParam) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
@@ -141,14 +141,13 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
       val eccOutput = EccCheck(EccGenerate(io.dataIn))
       io.dataOut := eccOutput.data
       io.doubleBitError := eccOutput.par
-    }) {
-      c =>
-        for (i <- 0 to 32) {
-          c.io.dataIn.poke(i.U)
-          c.clock.step(1)
-          c.io.dataOut.expect(i.U)
-          c.io.doubleBitError.expect(false.B)
-        }
+    }) { c =>
+      for (i <- 0 to 32) {
+        c.io.dataIn.poke(i.U)
+        c.clock.step(1)
+        c.io.dataOut.expect(i.U)
+        c.io.doubleBitError.expect(false.B)
+      }
     }
   }
 }

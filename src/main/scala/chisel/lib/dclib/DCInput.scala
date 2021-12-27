@@ -28,17 +28,17 @@ class DCInput[D <: Data](data: D) extends Module {
   drain := occupied && io.deq.ready
   load := io.enq.valid && ready_r && (!io.deq.ready || drain)
 
-  when (occupied) {
+  when(occupied) {
     io.deq.bits := hold
   }.otherwise {
     io.deq.bits := io.enq.bits
   }
 
   io.deq.valid := io.enq.valid || occupied
-  when (load) {
+  when(load) {
     occupied := true.B
     hold := io.enq.bits
-  }.elsewhen (drain) {
+  }.elsewhen(drain) {
     occupied := false.B
   }
 
@@ -54,4 +54,3 @@ object DCInput {
     tout.io.deq
   }
 }
-
