@@ -1,7 +1,6 @@
 package chisel.lib.dclib
 
 import chisel3._
-import chisel3.iotesters.PeekPokeTester
 
 class DCInputOutputTestbench(width: Int) extends Module {
   val io = IO(new Bundle {
