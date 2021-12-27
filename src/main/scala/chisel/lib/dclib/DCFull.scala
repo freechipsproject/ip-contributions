@@ -8,7 +8,7 @@ import chisel3.util._
   * FIFO.
   */
 object DCFull {
-  def apply[D <: Data](x : DecoupledIO[D]) : DecoupledIO[D] = {
+  def apply[D <: Data](x: DecoupledIO[D]): DecoupledIO[D] = {
     val tin = Module(new DCInput(x.bits.cloneType))
     val tout = Module(new DCOutput(x.bits.cloneType))
     tin.io.enq <> x

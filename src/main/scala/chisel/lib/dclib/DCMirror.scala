@@ -22,7 +22,7 @@ class DCMirror[D <: Data](data: D, n: Int) extends Module {
   val p_ready = Cat(io.p.map(_.ready).reverse)
   val nxt_accept = (p_valid === 0.U) || ((p_valid =/= 0.U) && ((p_valid & p_ready) === p_valid))
 
-  when (nxt_accept) {
+  when(nxt_accept) {
     p_valid := Fill(n, io.c.valid) & io.dst
     p_data := io.c.bits
   }.otherwise {

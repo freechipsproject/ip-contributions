@@ -24,3 +24,17 @@ jobs:
 
     - name: Unit Tests
       run: sbt test
+
+  doc:
+    name: Documentation and Formatting
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+      - name: Documentation
+        id: doc
+        run: sbt doc
+      - name: Check Formatting
+        run: sbt scalafmtCheckAll

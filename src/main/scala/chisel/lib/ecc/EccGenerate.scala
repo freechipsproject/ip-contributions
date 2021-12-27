@@ -4,7 +4,7 @@ package chisel.lib.ecc
 import chisel3._
 import chisel3.util.Cat
 
-class EccGenerate[D <: Data](data: D, doubleBit : Boolean = true) extends Module {
+class EccGenerate[D <: Data](data: D, doubleBit: Boolean = true) extends Module {
   val eccBits = calcCodeBits(data.getWidth)
 
   val io = IO(new Bundle {
@@ -18,7 +18,7 @@ class EccGenerate[D <: Data](data: D, doubleBit : Boolean = true) extends Module
   val bitMapping = calcBitMapping(data.getWidth, false)
 
   for (i <- 0 until eccBits) {
-    val bitSelect : Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.dataIn.asUInt()(bitMapping(j))
+    val bitSelect: Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.dataIn.asUInt()(bitMapping(j))
     bitValue(i) := bitSelect.reduce(_ ^ _)
   }
   io.eccOut := Cat(bitValue.reverse)
@@ -29,7 +29,7 @@ class EccGenerate[D <: Data](data: D, doubleBit : Boolean = true) extends Module
 
 // Helper function for functional inference
 object EccGenerate {
-  def apply[D <: Data](x : D) : withEcc[D] = {
+  def apply[D <: Data](x: D): withEcc[D] = {
     val withEccOut = Wire(new withEcc[D](x))
     val eccGenerator = Module(new EccGenerate(x.cloneType, true))
     eccGenerator.io.dataIn := x

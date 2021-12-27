@@ -18,13 +18,13 @@ class DCOutput[D <: Data](data: D) extends Module {
 
   io.enq.ready := io.deq.ready || !r_valid
   r_valid := io.enq.fire() || (r_valid && !io.deq.ready)
-  io.deq.bits := RegEnable(next=io.enq.bits, enable=io.enq.fire())
+  io.deq.bits := RegEnable(next = io.enq.bits, enable = io.enq.fire())
   io.deq.valid := r_valid
 }
 
 // Helper function for functional inference
 object DCOutput {
-  def apply[D <: Data](x : DecoupledIO[D]) : DecoupledIO[D] = {
+  def apply[D <: Data](x: DecoupledIO[D]): DecoupledIO[D] = {
     val tout = Module(new DCOutput(x.bits.cloneType))
     tout.io.enq <> x
     tout.io.deq

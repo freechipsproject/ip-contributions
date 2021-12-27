@@ -1,9 +1,9 @@
 /*
- * 
+ *
  * A UART is a serial port, also called an RS232 interface.
  *
  * Author: Martin Schoeberl (martin@jopdesign.com)
- * 
+ *
  */
 
 package chisel.lib.uart
@@ -16,12 +16,11 @@ class UartIO extends DecoupledIO(UInt(8.W)) {
   override def cloneType: this.type = new UartIO().asInstanceOf[this.type]
 }
 
-
 /**
- * Transmit part of the UART.
- * A minimal version without any additional buffering.
- * Use a ready/valid handshaking.
- */
+  * Transmit part of the UART.
+  * A minimal version without any additional buffering.
+  * Use a ready/valid handshaking.
+  */
 class Tx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val txd = Output(UInt(1.W))
@@ -59,13 +58,13 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
- * Receive part of the UART.
- * A minimal version without any additional buffering.
- * Use a ready/valid handshaking.
- *
- * The following code is inspired by Tommy's receive code at:
- * https://github.com/tommythorn/yarvi
- */
+  * Receive part of the UART.
+  * A minimal version without any additional buffering.
+  * Use a ready/valid handshaking.
+  *
+  * The following code is inspired by Tommy's receive code at:
+  * https://github.com/tommythorn/yarvi
+  */
 class Rx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val rxd = Input(UInt(1.W))
@@ -107,8 +106,8 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
- * A single byte buffer with a ready/valid interface
- */
+  * A single byte buffer with a ready/valid interface
+  */
 class Buffer extends Module {
   val io = IO(new Bundle {
     val in = Flipped(new UartIO())
@@ -136,8 +135,8 @@ class Buffer extends Module {
 }
 
 /**
- * A transmitter with a single buffer.
- */
+  * A transmitter with a single buffer.
+  */
 class BufferedTx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val txd = Output(UInt(1.W))
@@ -152,8 +151,8 @@ class BufferedTx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
- * Send a string.
- */
+  * Send a string.
+  */
 class Sender(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val txd = Output(UInt(1.W))
@@ -212,4 +211,3 @@ class UartMain(frequency: Int, baudRate: Int) extends Module {
 object UartMain extends App {
   (new ChiselStage).emitSystemVerilog(new UartMain(50000000, 115200), Array("--target-dir", "generated"))
 }
-

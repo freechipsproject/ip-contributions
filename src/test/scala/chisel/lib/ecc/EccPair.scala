@@ -4,7 +4,7 @@ package chisel.lib.ecc
 import chisel3._
 import chisel3.util._
 
-class EccPair(width : Int) extends Module {
+class EccPair(width: Int) extends Module {
   val eccBits = calcCodeBits(width)
   val outWidth = width + eccBits
 
@@ -22,7 +22,7 @@ class EccPair(width : Int) extends Module {
     val doubleBitError = Output(Bool())
   })
 
-  def getWidthParam : Int = { width }
+  def getWidthParam: Int = { width }
 
   val intermediate = Wire(UInt(width.W))
   val eccGen = Module(new EccGenerate(io.dataIn.cloneType))
@@ -30,9 +30,9 @@ class EccPair(width : Int) extends Module {
 
   eccGen.io.dataIn := io.dataIn
 
-  when (io.injectError) {
-    when (io.injectSecondError) {
-     intermediate := io.dataIn ^  (1.U << io.errorLocation) ^ (1.U << io.secondErrorLocation)
+  when(io.injectError) {
+    when(io.injectSecondError) {
+      intermediate := io.dataIn ^ (1.U << io.errorLocation) ^ (1.U << io.secondErrorLocation)
     }.otherwise {
       intermediate := io.dataIn ^ (1.U << io.errorLocation)
     }

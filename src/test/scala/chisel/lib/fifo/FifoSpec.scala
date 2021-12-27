@@ -8,7 +8,6 @@ import chiseltest._
 import firrtl.AnnotationSeq
 import org.scalatest.flatspec.AnyFlatSpec
 
-
 /**
   * Testing FIFO queue variations
   */
@@ -24,7 +23,7 @@ object testFifo {
     dut.io.enq.bits.poke(value.U)
     dut.io.enq.valid.poke(true.B)
     // wait for slot to become available
-    while(!dut.io.enq.ready.peek().litToBoolean) {
+    while (!dut.io.enq.ready.peek().litToBoolean) {
       dut.clock.step()
     }
     dut.clock.step()
@@ -34,7 +33,7 @@ object testFifo {
 
   private def pop(dut: Fifo[UInt], value: BigInt): Unit = {
     // wait for value to become available
-    while(!dut.io.deq.valid.peek().litToBoolean) {
+    while (!dut.io.deq.valid.peek().litToBoolean) {
       dut.clock.step()
     }
     // check value
@@ -52,7 +51,7 @@ object testFifo {
     var cnt = 0
     for (i <- 0 until 100) {
       dut.io.enq.bits.poke(i.U)
-      if(dut.io.enq.ready.peek().litToBoolean) {
+      if (dut.io.enq.ready.peek().litToBoolean) {
         cnt += 1
       }
       dut.clock.step()
@@ -95,7 +94,6 @@ object testFifo {
 class FifoSpec extends AnyFlatSpec with ChiselScalatestTester {
   private val defaultOptions: AnnotationSeq = Seq(WriteVcdAnnotation)
 
-
   "BubbleFifo" should "pass" in {
     test(new BubbleFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_, 2))
   }
@@ -117,4 +115,3 @@ class FifoSpec extends AnyFlatSpec with ChiselScalatestTester {
   }
 
 }
-

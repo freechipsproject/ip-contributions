@@ -5,7 +5,7 @@ import chisel3.util._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
 
-class CreditHarness(delay : Int, maxCredit : Int) extends Module {
+class CreditHarness(delay: Int, maxCredit: Int) extends Module {
   val io = IO(new Bundle {
     val dataIn = Flipped(Decoupled(UInt(8.W)))
     val dataOut = Decoupled(UInt(8.W))
@@ -20,9 +20,9 @@ class CreditHarness(delay : Int, maxCredit : Int) extends Module {
     sender.io.deq.credit := RegNext(delayPipe(0).credit)
     delayPipe(0).valid := RegNext(sender.io.deq.valid)
     delayPipe(0).bits := RegNext(sender.io.deq.bits)
-    receiver.io.enq.valid := RegNext(delayPipe(delay-1).valid)
-    receiver.io.enq.bits := RegNext(delayPipe(delay-1).bits)
-    delayPipe(delay-1).credit := RegNext(receiver.io.enq.credit)
+    receiver.io.enq.valid := RegNext(delayPipe(delay - 1).valid)
+    receiver.io.enq.bits := RegNext(delayPipe(delay - 1).bits)
+    delayPipe(delay - 1).credit := RegNext(receiver.io.enq.credit)
 
     if (delay >= 2) {
       for (i <- 0 to delay - 2) {
@@ -35,7 +35,7 @@ class CreditHarness(delay : Int, maxCredit : Int) extends Module {
     sender.io.deq <> receiver.io.enq
   }
 
-  when (io.dataIn.valid && !io.dataIn.ready) {
+  when(io.dataIn.valid && !io.dataIn.ready) {
     backpressured := true.B
   }
   io.dataIn <> sender.io.enq
@@ -44,12 +44,12 @@ class CreditHarness(delay : Int, maxCredit : Int) extends Module {
 }
 
 class CreditTester extends AnyFlatSpec with ChiselScalatestTester {
-  behavior of "Testers2 with Queue"
+  behavior.of("Testers2 with Queue")
 
   it should "test fixed credit with variable delay" in {
     for (n <- 0 to 5) {
-      test(new CreditHarness(n, 4)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new CreditHarness(n, 4)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.dataIn.initSource().setSourceClock(c.clock)
           c.io.dataOut.initSink().setSinkClock(c.clock)
 
@@ -65,12 +65,12 @@ class CreditTester extends AnyFlatSpec with ChiselScalatestTester {
 
   it should "not flow control with sufficient credit" in {
     for (n <- 4 to 10) {
-      test(new CreditHarness(n, n*3+6)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new CreditHarness(n, n * 3 + 6)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.dataIn.initSource().setSourceClock(c.clock)
           c.io.dataOut.initSink().setSinkClock(c.clock)
 
-          val dataPattern = for (i <- 1 to n*5) yield i.U
+          val dataPattern = for (i <- 1 to n * 5) yield i.U
           fork {
             c.io.dataIn.enqueueSeq(dataPattern)
           }
@@ -85,12 +85,12 @@ class CreditTester extends AnyFlatSpec with ChiselScalatestTester {
 
   it should "flow control with small credit" in {
     for (n <- 2 to 10) {
-      test(new CreditHarness(n, 2)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new CreditHarness(n, 2)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.dataIn.initSource().setSourceClock(c.clock)
           c.io.dataOut.initSink().setSinkClock(c.clock)
 
-          val dataPattern = for (i <- 1 to n*5) yield i.U
+          val dataPattern = for (i <- 1 to n * 5) yield i.U
           fork {
             c.io.dataIn.enqueueSeq(dataPattern)
           }

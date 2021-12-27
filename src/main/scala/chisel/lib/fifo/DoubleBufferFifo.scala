@@ -22,27 +22,27 @@ class DoubleBufferFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth
     val shadowReg = Reg(gen)
 
     switch(stateReg) {
-      is (empty) {
-        when (io.enq.valid) {
+      is(empty) {
+        when(io.enq.valid) {
           stateReg := one
           dataReg := io.enq.bits
         }
       }
-      is (one) {
-        when (io.deq.ready && !io.enq.valid) {
+      is(one) {
+        when(io.deq.ready && !io.enq.valid) {
           stateReg := empty
         }
-        when (io.deq.ready && io.enq.valid) {
+        when(io.deq.ready && io.enq.valid) {
           stateReg := one
           dataReg := io.enq.bits
         }
-        when (!io.deq.ready && io.enq.valid) {
+        when(!io.deq.ready && io.enq.valid) {
           stateReg := two
           shadowReg := io.enq.bits
         }
       }
-      is (two) {
-        when (io.deq.ready) {
+      is(two) {
+        when(io.deq.ready) {
           dataReg := shadowReg
           stateReg := one
         }
@@ -55,11 +55,11 @@ class DoubleBufferFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth
     io.deq.bits := dataReg
   }
 
-  private val buffers = Array.fill((depth+1)/2) { Module(new DoubleBuffer(gen)) }
+  private val buffers = Array.fill((depth + 1) / 2) { Module(new DoubleBuffer(gen)) }
 
-  for (i <- 0 until (depth+1)/2 - 1) {
+  for (i <- 0 until (depth + 1) / 2 - 1) {
     buffers(i + 1).io.enq <> buffers(i).io.deq
   }
   io.enq <> buffers(0).io.enq
-  io.deq <> buffers((depth+1)/2 - 1).io.deq
+  io.deq <> buffers((depth + 1) / 2 - 1).io.deq
 }
