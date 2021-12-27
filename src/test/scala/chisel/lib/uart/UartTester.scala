@@ -28,7 +28,7 @@ class UartTxTests extends AnyFlatSpec with ChiselScalatestTester {
       dut.clock.step(3)
 
       for (i <- 0 until 8) {
-        dut.io.txd.expect((('A'.toInt >> i) & 0x01).U)
+        dut.io.txd.expect((('a'.toInt >> i) & 0x01).U)
         dut.clock.step(3)
       }
       // stop bit
