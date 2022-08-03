@@ -91,6 +91,33 @@ Because its inputs are all decoupled, the inputs can arrive in any order.
 DCReduce will produce a result once all inputs have become valid, and
 hold the result until it is acknowledged ("ready" is true).
 
+### DCAsyncFifo
+
+Implements an asynchronous (clock-domain crossing) FIFO, using double synchronized
+gray code pointers.
+
+### DCCrossbar
+
+Implements a nonblocking crossbar, allowing any source to talk to any destination.
+
+### DCMcCrossbar
+
+Implements a multi-destination crossbar, which allows a source to send to multiple
+destinations.  This supports partial completions, so two sources talking to the same 
+group of output ports will not deadlock, but does not guarantee that all words from
+one source port will complete before another.
+
+### DCCredit
+
+Converts to/from a Decoupled interface to a CreditIO interface, which uses credits for 
+flow control rather than a ready signal.  The maxCredit parameters on the sender and
+receiver must match for a given interface.
+
+This block is intended as a top-level timing closure interface and has all registered
+inputs and outputs.  To achieve full performance the interface requires 5 credits  
+for the sender and receiver, plus 1 credit for each retiming flop inserted on the valid
+or credit signals.
+
 ## Functional Construction
 
 DCInput, DCOutput, DCHold, and DCFull all support functional construction,

@@ -3,6 +3,17 @@ package chisel.lib.dclib
 import chisel3._
 import chisel3.util._
 
+/**
+  * Asynchronous FIFO with Decoupled interfaces
+  *
+  * Implements a clock-domain crossing FIFO with synchronized pointers.  The FIFO must be a natural power of 2
+  * in depth, and should be at least 8 words deep for full performance.  Internally uses a 1-bit larger pointer
+  * value to track empty vs. full.
+  *
+  * @param data    Data type for FIFO
+  * @param depth   Depth of FIFO, must be power of 2
+  * @param doubleSync  Generator function to create a double-synchronized version of input
+  */
 class DCAsyncFifo[D <: Data](data: D, depth : Int, doubleSync : (UInt) => UInt = defaultDoubleSync) extends RawModule {
   val io = IO(new Bundle {
     val enq_clock = Input(Clock())
