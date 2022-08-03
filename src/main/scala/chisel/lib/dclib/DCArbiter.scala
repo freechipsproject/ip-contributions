@@ -4,20 +4,20 @@ import chisel3._
 import chisel3.util._
 
 /**
-  * Round-robin arbiter
-  *
-  * Accepts number of inputs and arbitrates between them on a per-cycle basis.
-  *
-  * @param data    Data type of item to be arbitrated
-  * @param inputs  Number of inputs to arbiter
-  * @param locking Creates a locking arbiter with a rearb input
-  */
+ * Round-robin arbiter
+ *
+ * Accepts number of inputs and arbitrates between them on a per-cycle basis.
+ *
+ * @param data    Data type of item to be arbitrated
+ * @param inputs  Number of inputs to arbiter
+ * @param locking Creates a locking arbiter with a rearb input
+ */
 class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Module {
   val io = IO(new Bundle {
     val c = Vec(inputs, Flipped(Decoupled(data.cloneType)))
     val p = Decoupled(data.cloneType)
     val grant = Output(UInt(inputs.W))
-    val rearb = if (locking) Some(Input(UInt(inputs.W))) else None
+    val rearb = if(locking) Some(Input(UInt(inputs.W))) else None
   })
   override def desiredName: String = "DCArbiter_" + data.toString
 
@@ -40,6 +40,7 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
     msk_req := cur_req & ~((cur_grant - 1.U) | cur_grant)
     tmp_grant := msk_req & (~msk_req + 1.U)
     tmp_grant2 := cur_req & (~cur_req + 1.U)
+
 
     when(cur_accept) {
       when(msk_req =/= 0.U) {
@@ -67,19 +68,19 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
   if (locking) {
     val rr_locked = RegInit(false.B)
 
-    when((io_c_valid & just_granted).orR() && !rr_locked) {
+    when ((io_c_valid & just_granted).orR() && !rr_locked) {
       nxt_rr_locked := true.B
-    }.elsewhen((io_c_valid & just_granted & io.rearb.get).orR()) {
+    }.elsewhen ((io_c_valid & just_granted & io.rearb.get).orR()) {
       nxt_rr_locked := false.B
     }.otherwise {
       nxt_rr_locked := rr_locked
     }
 
-    when(nxt_rr_locked && (io_c_valid & just_granted).orR()) {
+    when (nxt_rr_locked && (io_c_valid & just_granted).orR()) {
       to_be_granted := just_granted
     }.otherwise {
-      when(io.p.ready) {
-        to_be_granted := Cat(just_granted(0), just_granted(inputs - 1, 1))
+      when (io.p.ready) {
+        to_be_granted := Cat(just_granted(0), just_granted(inputs-1,1))
       }.otherwise {
         to_be_granted := just_granted
       }
@@ -89,14 +90,15 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
     to_be_granted := nxt_grant(just_granted, io_c_valid, io.p.ready)
   }
 
-  when(to_be_granted =/= 0.U) {
+  when (to_be_granted =/= 0.U) {
     just_granted := to_be_granted
   }
 
   io.p.bits := io.c(0).bits
   for (i <- 0 until inputs) {
-    when(to_be_granted(i)) {
+    when (to_be_granted(i)) {
       io.p.bits := io.c(i).bits
     }
   }
 }
+

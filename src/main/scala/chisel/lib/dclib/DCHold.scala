@@ -22,7 +22,7 @@ class DCHold[D <: Data](data: D) extends Module {
   val p_valid = RegInit(init = 0.U)
   val p_data = Reg(data.cloneType)
 
-  when(io.enq.valid && !p_valid) {
+  when (io.enq.valid && !p_valid) {
     p_valid := io.enq.valid
     p_data := io.enq.bits
   }.elsewhen((p_valid & io.deq.ready) === 1.U) {
@@ -35,7 +35,7 @@ class DCHold[D <: Data](data: D) extends Module {
 
 // Helper function for functional inference
 object DCHold {
-  def apply[D <: Data](x: DecoupledIO[D]): DecoupledIO[D] = {
+  def apply[D <: Data](x : DecoupledIO[D]) : DecoupledIO[D] = {
     val tout = Module(new DCHold(x.bits.cloneType))
     tout.io.enq <> x
     tout.io.deq

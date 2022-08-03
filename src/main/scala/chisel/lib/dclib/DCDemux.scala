@@ -21,7 +21,7 @@ class DCDemux[D <: Data](data: D, n: Int) extends Module {
   io.c.ready := 0.U
   for (i <- 0 until n) {
     io.p(i).bits := io.c.bits
-    when(i.U === io.sel) {
+    when (i.U === io.sel) {
       io.p(i).valid := io.c.valid
       io.c.ready := io.p(i).ready
     }.otherwise {
@@ -29,3 +29,5 @@ class DCDemux[D <: Data](data: D, n: Int) extends Module {
     }
   }
 }
+
+

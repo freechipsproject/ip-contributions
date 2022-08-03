@@ -16,13 +16,14 @@ class DCMirror[D <: Data](data: D, n: Int) extends Module {
     val c = Flipped(new DecoupledIO(data.cloneType))
     val p = Vec(n, new DecoupledIO(data.cloneType))
   })
+  override def desiredName: String = "DCMirror_" + data.toString + "_N" + n.toString
 
   val p_data = Reg(data.cloneType)
   val p_valid = RegInit(0.asUInt(n.W))
   val p_ready = Cat(io.p.map(_.ready).reverse)
   val nxt_accept = (p_valid === 0.U) || ((p_valid =/= 0.U) && ((p_valid & p_ready) === p_valid))
 
-  when(nxt_accept) {
+  when (nxt_accept) {
     p_valid := Fill(n, io.c.valid) & io.dst
     p_data := io.c.bits
   }.otherwise {
