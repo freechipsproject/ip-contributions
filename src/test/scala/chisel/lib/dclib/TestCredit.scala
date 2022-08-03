@@ -8,7 +8,7 @@ import org.scalatest.freespec.AnyFreeSpec
 
 import scala.util.Random
 
-class CreditB2B(credit : Int, validRetime : Int = 0, creditRetime : Int = 0) extends Module {
+class CreditB2B(credit: Int, validRetime: Int = 0, creditRetime: Int = 0) extends Module {
   val io = IO(new Bundle {
     val enq = Flipped(Decoupled(UInt(16.W)))
     val deq = Decoupled(UInt(16.W))
@@ -27,7 +27,7 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
   "pass data" in {
     for (rt <- 1 to 5) {
       // Adjusts amount of credit to test for full performance with different retiming
-      test(new CreditB2B(5+rt*2, rt, rt)).withAnnotations(Seq(WriteVcdAnnotation)) {
+      test(new CreditB2B(5 + rt * 2, rt, rt)).withAnnotations(Seq(WriteVcdAnnotation)) {
         c => {
           c.io.enq.initSource().setSourceClock(c.clock)
           c.io.deq.initSink().setSinkClock(c.clock)
@@ -83,7 +83,7 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
 
   "work with valid and credit retiming" in {
     for (retime <- 0 to 8) {
-      test(new CreditB2B(5+8, retime, 8-retime)).withAnnotations(Seq(WriteVcdAnnotation)) {
+      test(new CreditB2B(5 + 8, retime, 8 - retime)).withAnnotations(Seq(WriteVcdAnnotation)) {
         c => {
           c.io.enq.initSource().setSourceClock(c.clock)
           c.io.deq.initSink().setSinkClock(c.clock)

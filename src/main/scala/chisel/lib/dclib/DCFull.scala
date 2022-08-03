@@ -1,4 +1,5 @@
 package chisel.lib.dclib
+
 import chisel3._
 import chisel3.util._
 
@@ -7,7 +8,7 @@ import chisel3.util._
   * Effectively a 2-entry FIFO, but with registered inputs and outputs
   */
 object DCFull {
-  def apply[D <: Data](x : DecoupledIO[D]) : DecoupledIO[D] = {
+  def apply[D <: Data](x: DecoupledIO[D]): DecoupledIO[D] = {
     val tfull = Module(new DCFull(x.bits.cloneType))
     tfull.io.enq <> x
     tfull.io.deq <> tfull.io.enq
@@ -16,17 +17,18 @@ object DCFull {
 }
 
 /**
- * This is a port of Frank's sdfull module with better input/output timing
- *
- * Frank's version also supports internal control replication for wide datapaths, which was not ported
- *
- * @param data Incoming data type
- */
+  * This is a port of Frank's sdfull module with better input/output timing
+  *
+  * Frank's version also supports internal control replication for wide datapaths, which was not ported
+  *
+  * @param data Incoming data type
+  */
 class DCFull[D <: Data](data: D) extends Module {
   val io = IO(new Bundle {
     val enq = Flipped(new DecoupledIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
   })
+
   override def desiredName: String = "DCFull_" + data.toString
 
   // These are used for control replication for large fan-out
@@ -39,7 +41,7 @@ class DCFull[D <: Data](data: D) extends Module {
   // S_0_0: both hold flop empty
   // S_2_1: hold flop 0 is tail, holding flop 1 is head
   val s_0_0 :: s_1_0 :: s_0_1 :: s_2_1 :: Nil = Enum(4)
-  val state = RegInit(init=s_0_0)
+  val state = RegInit(init = s_0_0)
   val nxt_state = WireDefault(state)
 
   val hold_1 = Reg(data.cloneType)
@@ -62,9 +64,9 @@ class DCFull[D <: Data](data: D) extends Module {
 
   state := nxt_state
 
-  switch (state) {
-    is (s_0_0) {
-      when (push_vld) {
+  switch(state) {
+    is(s_0_0) {
+      when(push_vld) {
         nxt_state := s_1_0
         c_drdy := 1.B
         p_srdy := 1.B
@@ -72,56 +74,56 @@ class DCFull[D <: Data](data: D) extends Module {
       }
     }
 
-    is (s_1_0) {
-      when (push_vld && io.deq.ready) {
+    is(s_1_0) {
+      when(push_vld && io.deq.ready) {
         nxt_state := s_1_0;
-      }.elsewhen  ((push_vld) && (!io.deq.ready)) {
+      }.elsewhen((push_vld) && (!io.deq.ready)) {
         nxt_state := s_2_1;
-      }.elsewhen  ((!push_vld) && (io.deq.ready)) {
+      }.elsewhen((!push_vld) && (io.deq.ready)) {
         nxt_state := s_0_0
-      }.elsewhen  ((!push_vld) && (!io.deq.ready)) {
+      }.elsewhen((!push_vld) && (!io.deq.ready)) {
         nxt_state := s_0_1;
       }
     }
-    is (s_0_1) {
-      when (push_vld && io.deq.ready) {
+    is(s_0_1) {
+      when(push_vld && io.deq.ready) {
         nxt_state := s_1_0
-      }.elsewhen  ((push_vld) && (!io.deq.ready)) {
+      }.elsewhen((push_vld) && (!io.deq.ready)) {
         nxt_state := s_2_1
-      }.elsewhen  ((!push_vld) && (io.deq.ready)) {
+      }.elsewhen((!push_vld) && (io.deq.ready)) {
         nxt_state := s_0_0
-      }.elsewhen  ((!push_vld) && (!io.deq.ready)) {
+      }.elsewhen((!push_vld) && (!io.deq.ready)) {
         nxt_state := s_0_1
       }
     }
-    is (s_2_1) {
+    is(s_2_1) {
       when((!push_vld) && (io.deq.ready)) {
         nxt_state := s_1_0
       }
     }
   }
 
-  switch (nxt_state) {
-    is (s_0_0) {
+  switch(nxt_state) {
+    is(s_0_0) {
       nxt_shift := 0.B
       nxt_load := 1.B
       c_drdy := 1.B
       p_srdy := 0.B
     }
-    is (s_0_1) {
+    is(s_0_1) {
       nxt_load := 1.B
       c_drdy := 1.B
       p_srdy := 1.B
       nxt_send_sel := 0.B
     }
-    is (s_1_0) {
+    is(s_1_0) {
       nxt_shift := 1.B
       nxt_load := 1.B
       c_drdy := 1.B
       p_srdy := 1.B
       nxt_send_sel := 1.B
     }
-    is (s_2_1) {
+    is(s_2_1) {
       c_drdy := 0.B
       p_srdy := 1.B
       nxt_send_sel := 0.B
@@ -132,10 +134,10 @@ class DCFull[D <: Data](data: D) extends Module {
   load := nxt_load
   send_sel := nxt_send_sel
 
-  when (shift) {
+  when(shift) {
     hold_0 := hold_1
   }
-  when (load) {
+  when(load) {
     hold_1 := io.enq.bits
   }
   io.deq.bits := Mux(send_sel, hold_1, hold_0)

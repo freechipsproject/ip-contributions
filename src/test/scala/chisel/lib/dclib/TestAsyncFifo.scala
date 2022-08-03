@@ -7,7 +7,7 @@ import org.scalatest.freespec.AnyFreeSpec
 
 import scala.util.Random
 
-class AsyncWrap[D <: Data](data: D, depth : Int) extends Module {
+class AsyncWrap[D <: Data](data: D, depth: Int) extends Module {
   val io = IO(new Bundle {
     val enq = Flipped(new DecoupledIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
@@ -23,7 +23,7 @@ class AsyncWrap[D <: Data](data: D, depth : Int) extends Module {
   af.io.deq <> io.deq
 }
 
-class TestAsyncFifo  extends AnyFreeSpec with ChiselScalatestTester{
+class TestAsyncFifo extends AnyFreeSpec with ChiselScalatestTester {
   "start and stop randomly" in {
     test(new AsyncWrap(UInt(16.W), 8)).withAnnotations(Seq(WriteVcdAnnotation)) {
       c => {

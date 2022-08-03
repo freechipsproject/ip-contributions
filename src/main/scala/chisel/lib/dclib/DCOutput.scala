@@ -12,19 +12,20 @@ class DCOutput[D <: Data](data: D) extends Module {
     val enq = Flipped(new DecoupledIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
   })
+
   override def desiredName: String = "DCOutput_" + data.toString
 
   val r_valid = RegInit(false.B)
 
   io.enq.ready := io.deq.ready || !r_valid
   r_valid := io.enq.fire || (r_valid && !io.deq.ready)
-  io.deq.bits := RegEnable(next=io.enq.bits, enable=io.enq.fire)
+  io.deq.bits := RegEnable(next = io.enq.bits, enable = io.enq.fire)
   io.deq.valid := r_valid
 }
 
 // Helper function for functional inference
 object DCOutput {
-  def apply[D <: Data](x : DecoupledIO[D]) : DecoupledIO[D] = {
+  def apply[D <: Data](x: DecoupledIO[D]): DecoupledIO[D] = {
     val tout = Module(new DCOutput(x.bits.cloneType))
     tout.io.enq <> x
     tout.io.deq

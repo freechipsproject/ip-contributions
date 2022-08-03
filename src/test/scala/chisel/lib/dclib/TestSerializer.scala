@@ -20,7 +20,7 @@ class SerializerHarness[D <: Data](data: D, width: Int) extends Module {
   deser.io.dataOut <> io.deq
 }
 
-class TestSerializer extends AnyFreeSpec with ChiselScalatestTester{
+class TestSerializer extends AnyFreeSpec with ChiselScalatestTester {
   "start and stop randomly" in {
     for (width <- Seq(2, 3, 4, 8)) {
       test(new SerializerHarness(UInt(16.W), width)).withAnnotations(Seq(WriteVcdAnnotation)) {
