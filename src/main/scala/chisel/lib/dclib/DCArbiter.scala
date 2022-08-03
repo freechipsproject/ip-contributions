@@ -42,7 +42,6 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
     tmp_grant := msk_req & (~msk_req + 1.U)
     tmp_grant2 := cur_req & (~cur_req + 1.U)
 
-
     when(cur_accept) {
       when(msk_req =/= 0.U) {
         rv := tmp_grant
@@ -102,4 +101,3 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
     }
   }
 }
-

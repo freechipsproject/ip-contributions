@@ -25,8 +25,8 @@ class AsyncWrap[D <: Data](data: D, depth: Int) extends Module {
 
 class TestAsyncFifo extends AnyFreeSpec with ChiselScalatestTester {
   "start and stop randomly" in {
-    test(new AsyncWrap(UInt(16.W), 8)).withAnnotations(Seq(WriteVcdAnnotation)) {
-      c => {
+    test(new AsyncWrap(UInt(16.W), 8)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+      {
         c.io.enq.initSource().setSourceClock(c.clock)
         c.io.deq.initSink().setSinkClock(c.clock)
         val rand = new Random(1)

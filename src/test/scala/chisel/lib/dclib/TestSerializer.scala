@@ -23,8 +23,8 @@ class SerializerHarness[D <: Data](data: D, width: Int) extends Module {
 class TestSerializer extends AnyFreeSpec with ChiselScalatestTester {
   "start and stop randomly" in {
     for (width <- Seq(2, 3, 4, 8)) {
-      test(new SerializerHarness(UInt(16.W), width)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new SerializerHarness(UInt(16.W), width)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.enq.initSource().setSourceClock(c.clock)
           c.io.deq.initSink().setSinkClock(c.clock)
           val rand = new Random(1)

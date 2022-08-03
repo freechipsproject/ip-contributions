@@ -11,8 +11,8 @@ import scala.util.Random
 class TestDcFull extends AnyFreeSpec with ChiselScalatestTester {
 
   "pass data" in {
-    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) {
-      c => {
+    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+      {
         c.io.enq.initSource().setSourceClock(c.clock)
         c.io.deq.initSink().setSinkClock(c.clock)
 
@@ -29,8 +29,8 @@ class TestDcFull extends AnyFreeSpec with ChiselScalatestTester {
   }
 
   "work with flow control" in {
-    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) {
-      c => {
+    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+      {
         c.io.enq.valid.poke(1.B)
         c.io.enq.bits.poke(0x11.U)
         c.io.enq.ready.expect(true.B)
@@ -58,20 +58,18 @@ class TestDcFull extends AnyFreeSpec with ChiselScalatestTester {
         c.io.enq.ready.expect(true.B)
         c.io.deq.valid.expect(false.B)
 
-
       }
     }
   }
 
   "start and stop" in {
-    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) {
-      c => {
+    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+      {
         c.io.enq.initSource().setSourceClock(c.clock)
         c.io.deq.initSink().setSinkClock(c.clock)
 
         c.io.enq.enqueue(0x1122.U)
         c.io.enq.enqueue(0x3345.U)
-
 
         fork {
           c.clock.step(2)
@@ -91,8 +89,8 @@ class TestDcFull extends AnyFreeSpec with ChiselScalatestTester {
   }
 
   "start and stop randomly" in {
-    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) {
-      c => {
+    test(new DCFull(UInt(16.W))).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+      {
         c.io.enq.initSource().setSourceClock(c.clock)
         c.io.deq.initSink().setSinkClock(c.clock)
         val rand = new Random(1)

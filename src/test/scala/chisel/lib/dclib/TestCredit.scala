@@ -27,8 +27,8 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
   "pass data" in {
     for (rt <- 1 to 5) {
       // Adjusts amount of credit to test for full performance with different retiming
-      test(new CreditB2B(5 + rt * 2, rt, rt)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new CreditB2B(5 + rt * 2, rt, rt)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.enq.initSource().setSourceClock(c.clock)
           c.io.deq.initSink().setSinkClock(c.clock)
 
@@ -49,8 +49,8 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
 
   "start and stop randomly" in {
     for (credit <- 1 to 10) {
-      test(new CreditB2B(credit)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new CreditB2B(credit)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.enq.initSource().setSourceClock(c.clock)
           c.io.deq.initSink().setSinkClock(c.clock)
           val rand = new Random(1)
@@ -83,8 +83,8 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
 
   "work with valid and credit retiming" in {
     for (retime <- 0 to 8) {
-      test(new CreditB2B(5 + 8, retime, 8 - retime)).withAnnotations(Seq(WriteVcdAnnotation)) {
-        c => {
+      test(new CreditB2B(5 + 8, retime, 8 - retime)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+        {
           c.io.enq.initSource().setSourceClock(c.clock)
           c.io.deq.initSink().setSinkClock(c.clock)
           val rand = new Random(1)

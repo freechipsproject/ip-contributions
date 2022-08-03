@@ -30,5 +30,3 @@ class DCDemux[D <: Data](data: D, n: Int) extends Module {
     }
   }
 }
-
-

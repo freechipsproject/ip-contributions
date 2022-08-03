@@ -55,4 +55,3 @@ object DCInput {
     tout.io.deq
   }
 }
-

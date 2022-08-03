@@ -1,7 +1,7 @@
 package chisel.lib.dclib
 
 import chisel3._
-import chisel3.util.{DecoupledIO, log2Ceil}
+import chisel3.util.{log2Ceil, DecoupledIO}
 
 /**
   * A simple crossbar to connect M inputs to N outputs.  The crossbar should be
