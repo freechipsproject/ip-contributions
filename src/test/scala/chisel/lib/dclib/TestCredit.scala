@@ -55,25 +55,25 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
           c.io.deq.initSink().setSinkClock(c.clock)
           val rand = new Random(1)
 
-          val total_count = 100
-          var tx_count: Int = 0
-          var rx_count: Int = 0
+          val totalCount = 100
+          var txCount: Int = 0
+          var rxCount: Int = 0
 
           fork {
-            while (tx_count < total_count) {
+            while (txCount < totalCount) {
               if (rand.nextFloat() > 0.35) {
                 c.clock.step(1)
               }
-              c.io.enq.enqueue(tx_count.U)
-              tx_count += 1
+              c.io.enq.enqueue(txCount.U)
+              txCount += 1
             }
           }.fork {
-            while (rx_count < total_count) {
+            while (rxCount < totalCount) {
               if (rand.nextFloat() > 0.35) {
                 c.clock.step(1)
               }
-              c.io.deq.expectDequeue(rx_count.U)
-              rx_count += 1
+              c.io.deq.expectDequeue(rxCount.U)
+              rxCount += 1
             }
           }.join()
         }
@@ -114,5 +114,4 @@ class TestCredit extends AnyFreeSpec with ChiselScalatestTester {
       }
     }
   }
-
 }

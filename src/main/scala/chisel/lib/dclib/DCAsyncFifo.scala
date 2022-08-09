@@ -16,10 +16,10 @@ import chisel3.util._
   */
 class DCAsyncFifo[D <: Data](data: D, depth: Int, doubleSync: (UInt) => UInt = defaultDoubleSync) extends RawModule {
   val io = IO(new Bundle {
-    val enq_clock = Input(Clock())
-    val enq_reset = Input(Reset())
-    val deq_clock = Input(Clock())
-    val deq_reset = Input(Reset())
+    val enqClock = Input(Clock())
+    val enqReset = Input(Reset())
+    val deqClock = Input(Clock())
+    val deqReset = Input(Reset())
     val enq = Flipped(new DecoupledIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
   })
@@ -27,21 +27,21 @@ class DCAsyncFifo[D <: Data](data: D, depth: Int, doubleSync: (UInt) => UInt = d
   val asz = log2Ceil(depth)
   require(depth == 1 << asz)
 
-  val mem = withClockAndReset(io.enq_clock, io.enq_reset) {
+  val mem = withClockAndReset(io.enqClock, io.enqReset) {
     Reg(Vec(depth, data))
   }
-  val wrptr_enq = withClockAndReset(io.enq_clock, io.enq_reset) {
+  val wrptr_enq = withClockAndReset(io.enqClock, io.enqReset) {
     RegInit(init = 0.U((asz + 1).W))
   }
   val wrptr_grey_enq = BinaryToGray(wrptr_enq)
-  val wrptr_grey_deq = withClockAndReset(io.deq_clock, io.deq_reset) {
+  val wrptr_grey_deq = withClockAndReset(io.deqClock, io.deqReset) {
     doubleSync(wrptr_grey_enq)
   }
-  val rdptr_deq = withClockAndReset(io.deq_clock, io.deq_reset) {
+  val rdptr_deq = withClockAndReset(io.deqClock, io.deqReset) {
     RegInit(init = 0.U((asz + 1).W))
   }
   val rdptr_grey_deq = BinaryToGray(rdptr_deq)
-  val rdptr_grey_enq = withClockAndReset(io.enq_clock, io.enq_reset) {
+  val rdptr_grey_enq = withClockAndReset(io.enqClock, io.enqReset) {
     doubleSync(rdptr_grey_deq)
   }
 
@@ -52,7 +52,7 @@ class DCAsyncFifo[D <: Data](data: D, depth: Int, doubleSync: (UInt) => UInt = d
 
   when(io.enq.fire) {
     wrptr_enq := wrptr_enq + 1.U
-    withClockAndReset(io.enq_clock, io.enq_reset) {
+    withClockAndReset(io.enqClock, io.enqReset) {
       mem(wrptr_enq(asz - 1, 0)) := io.enq.bits
     }
   }

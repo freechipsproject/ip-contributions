@@ -46,17 +46,17 @@ class DCFull[D <: Data](data: D) extends Module {
 
   val hold_1 = Reg(data.cloneType)
   val hold_0 = Reg(data.cloneType)
-  val nxt_shift = WireDefault(0.B)
-  val nxt_load = WireDefault(0.B)
-  val nxt_send_sel = WireDefault(1.B)
+  val nxtShift = WireDefault(0.B)
+  val nxtLoad = WireDefault(0.B)
+  val nxtSendSel = WireDefault(1.B)
   val shift = Reg(Bool())
   val load = Reg(Bool())
-  val send_sel = Reg(Bool())
-  val c_drdy = RegInit(1.B)
-  val p_srdy = RegInit(0.B)
+  val sendSel = Reg(Bool())
+  val enqReady = RegInit(1.B)
+  val deqValid = RegInit(0.B)
 
-  io.enq.ready := c_drdy
-  io.deq.valid := p_srdy
+  io.enq.ready := enqReady
+  io.deq.valid := deqValid
 
   // State control
   val push_vld = io.enq.ready & io.enq.valid
@@ -68,9 +68,9 @@ class DCFull[D <: Data](data: D) extends Module {
     is(s_0_0) {
       when(push_vld) {
         nxt_state := s_1_0
-        c_drdy := 1.B
-        p_srdy := 1.B
-        nxt_send_sel := 1.B;
+        enqReady := 1.B
+        deqValid := 1.B
+        nxtSendSel := 1.B;
       }
     }
 
@@ -105,34 +105,34 @@ class DCFull[D <: Data](data: D) extends Module {
 
   switch(nxt_state) {
     is(s_0_0) {
-      nxt_shift := 0.B
-      nxt_load := 1.B
-      c_drdy := 1.B
-      p_srdy := 0.B
+      nxtShift := 0.B
+      nxtLoad := 1.B
+      enqReady := 1.B
+      deqValid := 0.B
     }
     is(s_0_1) {
-      nxt_load := 1.B
-      c_drdy := 1.B
-      p_srdy := 1.B
-      nxt_send_sel := 0.B
+      nxtLoad := 1.B
+      enqReady := 1.B
+      deqValid := 1.B
+      nxtSendSel := 0.B
     }
     is(s_1_0) {
-      nxt_shift := 1.B
-      nxt_load := 1.B
-      c_drdy := 1.B
-      p_srdy := 1.B
-      nxt_send_sel := 1.B
+      nxtShift := 1.B
+      nxtLoad := 1.B
+      enqReady := 1.B
+      deqValid := 1.B
+      nxtSendSel := 1.B
     }
     is(s_2_1) {
-      c_drdy := 0.B
-      p_srdy := 1.B
-      nxt_send_sel := 0.B
+      enqReady := 0.B
+      deqValid := 1.B
+      nxtSendSel := 0.B
     }
   }
 
-  shift := nxt_shift
-  load := nxt_load
-  send_sel := nxt_send_sel
+  shift := nxtShift
+  load := nxtLoad
+  sendSel := nxtSendSel
 
   when(shift) {
     hold_0 := hold_1
@@ -140,5 +140,5 @@ class DCFull[D <: Data](data: D) extends Module {
   when(load) {
     hold_1 := io.enq.bits
   }
-  io.deq.bits := Mux(send_sel, hold_1, hold_0)
+  io.deq.bits := Mux(sendSel, hold_1, hold_0)
 }

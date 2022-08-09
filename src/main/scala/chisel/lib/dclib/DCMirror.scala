@@ -20,21 +20,21 @@ class DCMirror[D <: Data](data: D, n: Int) extends Module {
 
   override def desiredName: String = "DCMirror_" + data.toString + "_N" + n.toString
 
-  val p_data = Reg(data.cloneType)
-  val p_valid = RegInit(0.asUInt(n.W))
-  val p_ready = Cat(io.p.map(_.ready).reverse)
-  val nxt_accept = (p_valid === 0.U) || ((p_valid =/= 0.U) && ((p_valid & p_ready) === p_valid))
+  val pData = Reg(data.cloneType)
+  val pValid = RegInit(0.asUInt(n.W))
+  val pReady = Cat(io.p.map(_.ready).reverse)
+  val nxtAccept = (pValid === 0.U) || ((pValid =/= 0.U) && ((pValid & pReady) === pValid))
 
-  when(nxt_accept) {
-    p_valid := Fill(n, io.c.valid) & io.dst
-    p_data := io.c.bits
+  when(nxtAccept) {
+    pValid := Fill(n, io.c.valid) & io.dst
+    pData := io.c.bits
   }.otherwise {
-    p_valid := p_valid & ~p_ready
+    pValid := pValid & ~pReady
   }
-  io.c.ready := nxt_accept
+  io.c.ready := nxtAccept
 
   for (i <- 0 until n) {
-    io.p(i).bits := p_data
-    io.p(i).valid := p_valid(i)
+    io.p(i).bits := pData
+    io.p(i).valid := pValid(i)
   }
 }

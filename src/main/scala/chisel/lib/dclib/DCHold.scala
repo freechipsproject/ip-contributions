@@ -20,18 +20,18 @@ class DCHold[D <: Data](data: D) extends Module {
 
   override def desiredName: String = "DCHold_" + data.toString
 
-  val p_valid = RegInit(init = 0.U)
-  val p_data = Reg(data.cloneType)
+  val pValid = RegInit(init = 0.U)
+  val pData = Reg(data.cloneType)
 
-  when(io.enq.valid && !p_valid) {
-    p_valid := io.enq.valid
-    p_data := io.enq.bits
-  }.elsewhen((p_valid & io.deq.ready) === 1.U) {
-    p_valid := 0.U
+  when(io.enq.valid && !pValid) {
+    pValid := io.enq.valid
+    pData := io.enq.bits
+  }.elsewhen((pValid & io.deq.ready) === 1.U) {
+    pValid := 0.U
   }
-  io.deq.valid := p_valid
-  io.deq.bits := p_data
-  io.enq.ready := ~p_valid
+  io.deq.valid := pValid
+  io.deq.bits := pData
+  io.enq.ready := ~pValid
 }
 
 // Helper function for functional inference

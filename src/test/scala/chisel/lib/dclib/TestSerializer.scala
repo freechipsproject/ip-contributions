@@ -29,32 +29,31 @@ class TestSerializer extends AnyFreeSpec with ChiselScalatestTester {
           c.io.deq.initSink().setSinkClock(c.clock)
           val rand = new Random(1)
 
-          val total_count = 250
-          var tx_count: Int = 0
-          var rx_count: Int = 0
+          val totalCount = 250
+          var txCount: Int = 0
+          var rxCount: Int = 0
 
           fork {
-            while (tx_count < total_count) {
+            while (txCount < totalCount) {
               if (rand.nextFloat() > 0.35) {
                 c.clock.step(1)
               }
-              val item = (tx_count * 13421) % 65535
+              val item = (txCount * 13421) % 65535
               c.io.enq.enqueue(item.U)
-              tx_count += 1
+              txCount += 1
             }
           }.fork {
-            while (rx_count < total_count) {
+            while (rxCount < totalCount) {
               if (rand.nextFloat() > 0.35) {
                 c.clock.step(1)
               }
-              val item = (rx_count * 13421) % 65535
+              val item = (rxCount * 13421) % 65535
               c.io.deq.expectDequeue(item.U)
-              rx_count += 1
+              rxCount += 1
             }
           }.join()
         }
       }
     }
   }
-
 }

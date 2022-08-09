@@ -14,10 +14,10 @@ class AsyncWrap[D <: Data](data: D, depth: Int) extends Module {
   })
 
   val af = Module(new DCAsyncFifo(data, depth))
-  af.io.enq_clock := clock
-  af.io.enq_reset := reset
-  af.io.deq_clock := clock
-  af.io.deq_reset := reset
+  af.io.enqClock := clock
+  af.io.enqReset := reset
+  af.io.deqClock := clock
+  af.io.deqReset := reset
 
   af.io.enq <> io.enq
   af.io.deq <> io.deq
