@@ -12,9 +12,7 @@ import chisel3._
 import chisel3.stage.ChiselStage
 import chisel3.util._
 
-class UartIO extends DecoupledIO(UInt(8.W)) {
-  override def cloneType: this.type = new UartIO().asInstanceOf[this.type]
-}
+class UartIO extends DecoupledIO(UInt(8.W))
 
 /**
   * Transmit part of the UART.

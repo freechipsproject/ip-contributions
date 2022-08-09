@@ -60,7 +60,6 @@ class CordicBundle[T <: Data](params: CordicParams[T]) extends Bundle {
   val y: T = params.protoXY.cloneType
   val z: T = params.protoZ.cloneType
 
-  override def cloneType: this.type = CordicBundle(params).asInstanceOf[this.type]
 }
 object CordicBundle {
   def apply[T <: Data](params: CordicParams[T]): CordicBundle[T] = new CordicBundle(params)
@@ -72,7 +71,6 @@ object CordicBundle {
 class CordicBundleWithVectoring[T <: Data](params: CordicParams[T]) extends CordicBundle[T](params) {
   val vectoring: Bool = Bool()
 
-  override def cloneType: this.type = CordicBundleWithVectoring(params).asInstanceOf[this.type]
 }
 object CordicBundleWithVectoring {
   def apply[T <: Data](params: CordicParams[T]): CordicBundleWithVectoring[T] = new CordicBundleWithVectoring(params)
@@ -86,7 +84,6 @@ class CordicInternalBundle[T <: Data](params: CordicParams[T]) extends Bundle {
   val y: T = params.protoXYZ.cloneType
   val z: T = params.protoXYZ.cloneType
 
-  override def cloneType: this.type = CordicInternalBundle(params).asInstanceOf[this.type]
 }
 object CordicInternalBundle {
   def apply[T <: Data](params: CordicParams[T]): CordicInternalBundle[T] = new CordicInternalBundle(params)
@@ -101,7 +98,6 @@ class IterativeCordicIO[T <: Data](params: CordicParams[T]) extends Bundle {
 
   //val vectoring = Input(Bool())
 
-  override def cloneType: this.type = IterativeCordicIO(params).asInstanceOf[this.type]
 }
 object IterativeCordicIO {
   def apply[T <: Data](params: CordicParams[T]): IterativeCordicIO[T] =

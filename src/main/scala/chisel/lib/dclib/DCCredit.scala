@@ -13,8 +13,6 @@ class CreditIO[D <: Data](data: D) extends Bundle {
   val valid = Output(Bool())
   val credit = Input(Bool())
   val bits = Output(data.cloneType)
-  override def cloneType =
-    new CreditIO(bits.cloneType).asInstanceOf[this.type]
 }
 
 class DCCreditSender[D <: Data](data: D, maxCredit: Int) extends Module {
