@@ -8,9 +8,6 @@ class withEcc[D <: Data](dat: D) extends Bundle {
   val data = dat.cloneType
   val ecc = UInt(calcCodeBits(dat.getWidth).W)
   val par = Bool()
-  override def cloneType: this.type = {
-    new withEcc(dat).asInstanceOf[this.type]
-  }
 }
 
 class EccCheck[D <: Data](data: D, doubleBit: Boolean = true) extends Module {

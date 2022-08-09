@@ -12,9 +12,7 @@ import chisel3._
 import chisel3.stage.ChiselStage
 import chisel3.util._
 
-class UartIO extends DecoupledIO(UInt(8.W)) {
-  override def cloneType: this.type = new UartIO().asInstanceOf[this.type]
-}
+class UartIO extends DecoupledIO(UInt(8.W))
 
 /**
   * Transmit part of the UART.
@@ -27,7 +25,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
     val channel = Flipped(new UartIO())
   })
 
-  val BIT_CNT = ((frequency + baudRate / 2) / baudRate - 1).asUInt()
+  val BIT_CNT = ((frequency + baudRate / 2) / baudRate - 1).asUInt
 
   val shiftReg = RegInit(0x7ff.U)
   val cntReg = RegInit(0.U(20.W))

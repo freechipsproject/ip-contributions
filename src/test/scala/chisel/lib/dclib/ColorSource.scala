@@ -7,18 +7,11 @@ class PktToken(asz: Int, cycsz: Int = 16) extends Bundle {
   val src = UInt(asz.W)
   val dst = UInt(asz.W)
   val cycle = UInt(cycsz.W)
-
-  override def cloneType =
-    new PktToken(asz, cycsz).asInstanceOf[this.type]
 }
 
 class ColorToken(colors: Int, dsz: Int) extends Bundle {
   val color = UInt(log2Ceil(colors).W)
   val seqnum = UInt(dsz.W)
-
-  override def cloneType =
-    new ColorToken(colors, dsz).asInstanceOf[this.type]
-
 }
 
 class ColorSource(colors: Int, dsz: Int) extends Module {
