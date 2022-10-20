@@ -10,7 +10,7 @@ import firrtl.AnnotationSeq
 import org.scalatest.flatspec.AnyFlatSpec
 
 class FifoFormalTest extends AnyFlatSpec with ChiselScalatestTester with Formal {
-  private val defaultOptions: AnnotationSeq = Seq(BoundedCheck(10), BtormcEngineAnnotation)
+  private val defaultOptions: AnnotationSeq = Seq(BoundedCheck(10))
 
   "BubbleFifo" should "pass" in {
     verify(new FifoTestWrapper(new BubbleFifo(UInt(16.W), 4)), defaultOptions)
