@@ -9,8 +9,8 @@ import firrtl.AnnotationSeq
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
- * Testing FIFO queue variations
- */
+  * Testing FIFO queue variations
+  */
 object testFifo {
 
   private def initIO(dut: Fifo[UInt]): Unit = {

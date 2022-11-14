@@ -33,39 +33,39 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   val op = io.enq.valid ## io.deq.ready
 
-  switch (op) {
-    is ("b00".U) { }
-    is ("b01".U) { // read
-      when (!emptyReg) {
+  switch(op) {
+    is("b00".U) {}
+    is("b01".U) { // read
+      when(!emptyReg) {
         fullReg := false.B
         emptyReg := nextRead === writePtr
         incrRead := true.B
       }
     }
-    is ("b10".U) { // write
-      when (!fullReg) {
+    is("b10".U) { // write
+      when(!fullReg) {
         memReg(writePtr) := io.enq.bits
         emptyReg := false.B
         fullReg := nextWrite === readPtr
         incrWrite := true.B
       }
     }
-    is ("b11".U) { // write and read
-      when (!fullReg) {
+    is("b11".U) { // write and read
+      when(!fullReg) {
         memReg(writePtr) := io.enq.bits
         emptyReg := false.B
-        when (emptyReg) {
+        when(emptyReg) {
           fullReg := nextWrite === readPtr
-        } .otherwise {
+        }.otherwise {
           fullReg := nextWrite === nextRead
         }
         incrWrite := true.B
       }
-      when (!emptyReg) {
+      when(!emptyReg) {
         fullReg := false.B
-        when (fullReg) {
+        when(fullReg) {
           emptyReg := nextRead === writePtr
-        } .otherwise {
+        }.otherwise {
           emptyReg := nextRead === nextWrite
         }
         incrRead := true.B
@@ -81,7 +81,7 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
   val fullNr = Mux(fullReg, depth.U, 0.U)
   val number = writePtr - readPtr + fullNr
   assert(number >= 0.U)
-  assert(number < (depth+1).U)
+  assert(number < (depth + 1).U)
 
   assert(!(emptyReg && fullReg))
 
@@ -90,11 +90,11 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     assert(fullReg === false.B)
   }
 
-  when (fullReg) {
+  when(fullReg) {
     assert(readPtr === writePtr)
   }
 
-  when (emptyReg) {
+  when(emptyReg) {
     assert(readPtr === writePtr)
   }
 }
