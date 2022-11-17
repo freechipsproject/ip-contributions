@@ -32,6 +32,7 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
   val fullReg = RegInit(false.B)
 
   val op = io.enq.valid ## io.deq.ready
+  val doWrite = WireDefault(false.B)
 
   switch(op) {
     is("b00".U) {}
@@ -44,7 +45,7 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     }
     is("b10".U) { // write
       when(!fullReg) {
-        memReg(writePtr) := io.enq.bits
+        doWrite := true.B
         emptyReg := false.B
         fullReg := nextWrite === readPtr
         incrWrite := true.B
@@ -52,10 +53,10 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     }
     is("b11".U) { // write and read
       when(!fullReg) {
-        memReg(writePtr) := io.enq.bits
+        doWrite := true.B
         emptyReg := false.B
         when(emptyReg) {
-          fullReg := nextWrite === readPtr
+          fullReg := false.B
         }.otherwise {
           fullReg := nextWrite === nextRead
         }
@@ -64,13 +65,17 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
       when(!emptyReg) {
         fullReg := false.B
         when(fullReg) {
-          emptyReg := nextRead === writePtr
+          emptyReg := false.B
         }.otherwise {
           emptyReg := nextRead === nextWrite
         }
         incrRead := true.B
       }
     }
+  }
+
+  when(doWrite) {
+    memReg(writePtr) := io.enq.bits
   }
 
   io.deq.bits := memReg(readPtr)
