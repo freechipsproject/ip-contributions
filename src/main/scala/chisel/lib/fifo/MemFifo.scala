@@ -46,8 +46,9 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     mem.write(writePtr, io.enq.bits)
   }
 
-  val readCond = !outputValidReg && ((readPtr =/= writePtr) || fullReg) // should add optimization when downstream is ready for pipielining
-  when (readCond) {
+  val readCond =
+    !outputValidReg && ((readPtr =/= writePtr) || fullReg) // should add optimization when downstream is ready for pipielining
+  when(readCond) {
     read := true.B
     incrRead := true.B
     outputReg := data
@@ -55,12 +56,12 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     emptyReg := nextRead === writePtr
     fullReg := false.B // no concurrent read when full (at the moment)
   }
-  when (io.deq.fire) {
+  when(io.deq.fire) {
     outputValidReg := false.B
   }
   io.deq.bits := outputReg
 
-  when (io.enq.fire) {
+  when(io.enq.fire) {
     emptyReg := false.B
     fullReg := (nextWrite === readPtr) & !read
     incrWrite := true.B

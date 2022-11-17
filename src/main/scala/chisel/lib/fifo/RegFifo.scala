@@ -34,7 +34,6 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
   val op = io.enq.valid ## io.deq.ready
   val doWrite = WireDefault(false.B)
 
-
   switch(op) {
     is("b00".U) {}
     is("b01".U) { // read
@@ -78,7 +77,6 @@ class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
   when(doWrite) {
     memReg(writePtr) := io.enq.bits
   }
-
 
   io.deq.bits := memReg(readPtr)
   io.enq.ready := !fullReg
