@@ -17,8 +17,8 @@ class DCOutput[D <: Data](data: D) extends Module {
   val r_valid = RegInit(false.B)
 
   io.enq.ready := io.deq.ready || !r_valid
-  r_valid := io.enq.fire() || (r_valid && !io.deq.ready)
-  io.deq.bits := RegEnable(next = io.enq.bits, enable = io.enq.fire())
+  r_valid := io.enq.fire || (r_valid && !io.deq.ready)
+  io.deq.bits := RegEnable(io.enq.bits, io.enq.fire)
   io.deq.valid := r_valid
 }
 

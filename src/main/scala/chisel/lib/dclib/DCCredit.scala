@@ -24,15 +24,15 @@ class DCCreditSender[D <: Data](data: D, maxCredit: Int) extends Module {
   require(maxCredit >= 1)
 
   val icredit = RegNext(io.deq.credit)
-  val curCredit = RegInit(init = maxCredit.U)
-  when(icredit && !io.enq.fire()) {
+  val curCredit = RegInit(maxCredit.U)
+  when(icredit && !io.enq.fire) {
     curCredit := curCredit + 1.U
-  }.elsewhen(!icredit && io.enq.fire()) {
+  }.elsewhen(!icredit && io.enq.fire) {
     curCredit := curCredit - 1.U
   }
   io.enq.ready := curCredit > 0.U
-  val dataOut = RegEnable(next = io.enq.bits, enable = io.enq.fire())
-  val validOut = RegNext(next = io.enq.fire(), init = false.B)
+  val dataOut = RegEnable(io.enq.bits, io.enq.fire)
+  val validOut = RegNext(io.enq.fire, false.B)
   io.deq.valid := validOut
   io.deq.bits := dataOut
   io.curCredit := curCredit
@@ -53,6 +53,6 @@ class DCCreditReceiver[D <: Data](data: D, maxCredit: Int) extends Module {
   outFifo.io.enq.bits := idata
   io.fifoCount := outFifo.io.count
   io.deq <> outFifo.io.deq
-  val ocredit = RegNext(next = outFifo.io.deq.fire(), init = false.B)
+  val ocredit = RegNext(outFifo.io.deq.fire, false.B)
   io.enq.credit := ocredit
 }
