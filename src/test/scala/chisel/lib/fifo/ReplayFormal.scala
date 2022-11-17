@@ -9,7 +9,7 @@ import firrtl.AnnotationSeq
 import org.scalatest.flatspec.AnyFlatSpec
 
 class ReplayFormal extends AnyFlatSpec with ChiselScalatestTester {
-  private val defaultOptions: AnnotationSeq = Seq(WriteVcdAnnotation) //, VerilatorBackendAnnotation)
+  private val defaultOptions: AnnotationSeq = Seq(WriteVcdAnnotation)
 
   "MemFifo" should "reply formal issue" in {
     test(new MemFifo(UInt(16.W), 4)).withAnnotations(defaultOptions) { dut =>
