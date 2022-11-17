@@ -136,7 +136,6 @@ object testFifo {
     initIO(dut)
     dut.clock.step()
 
-
     // write one value and expect it on the deq side after some cycles
     push(dut, 0x123)
     dut.clock.step(12)
@@ -199,7 +198,6 @@ object testFifo {
 
     reset(dut)
 
-
     // Do the speed test
     val (cnt, cycles) = speedTest(dut)
     // TODO: uncomment again
@@ -208,7 +206,6 @@ object testFifo {
     assert(cycles >= 0.99, "Cannot be faster than one clock cycle per word")
 
     reset(dut)
-
 
     // Do the threaded test
     threadedTest(dut)
@@ -236,10 +233,10 @@ class FifoSpec extends AnyFlatSpec with ChiselScalatestTester {
   "MemFifo" should "pass" in {
     test(new MemFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
-/*
+  /*
   "CombFifo" should "pass" in {
     test(new CombFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_))
   }
 
- */
+   */
 }

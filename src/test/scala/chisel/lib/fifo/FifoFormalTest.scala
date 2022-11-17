@@ -24,7 +24,7 @@ class FifoFormalTest extends AnyFlatSpec with ChiselScalatestTester with Formal 
     verify(new FifoTestWrapper(new RegFifo(UInt(16.W), 4)), defaultOptions)
   }
 
-/*
+  /*
   "MemFifo" should "pass" in {
     verify(new FifoTestWrapper(new MemFifo(UInt(16.W), 4)), defaultOptions)
   }
@@ -33,7 +33,7 @@ class FifoFormalTest extends AnyFlatSpec with ChiselScalatestTester with Formal 
     verify(new FifoTestWrapper(new CombFifo(UInt(16.W), 4)), defaultOptions)
   }
 
- */
+   */
 }
 
 class FifoTestWrapper(fifo: => Fifo[UInt]) extends Module {
