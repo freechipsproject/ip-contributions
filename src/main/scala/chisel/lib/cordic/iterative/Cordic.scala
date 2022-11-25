@@ -152,7 +152,7 @@ class IterativeCordic[T <: Data: Real: BinaryRepresentation](val params: CordicP
   io.out.valid := outValid
 
   // when the input interface turns valid deassert ready & load the initial data (incl. initial rotation if necessary)
-  when(io.in.fire()) {
+  when(io.in.fire) {
     inReady := false.B
     vecReg := io.in.bits.vectoring
     extReg := ext
@@ -174,7 +174,7 @@ class IterativeCordic[T <: Data: Real: BinaryRepresentation](val params: CordicP
   when(counter >= (params.nStages).U) {
     outValid := true.B
 
-    when(io.out.fire()) {
+    when(io.out.fire) {
       counter := 0.U
       inReady := true.B
       outValid := false.B

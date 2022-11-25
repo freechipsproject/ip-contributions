@@ -25,7 +25,7 @@ class ColorSource(colors: Int, dsz: Int) extends Module {
   val seqnum = RegInit(0.asUInt(dsz.W))
   val strobe = RegInit(0.asUInt(4.W))
 
-  when(io.p.fire()) {
+  when(io.p.fire) {
     seqnum := seqnum + 1.U
   }
 
@@ -61,7 +61,7 @@ class ColorSink(colors: Int, dsz: Int) extends Module {
   val color_error = RegInit(false.B)
   val okCount = RegInit(0.U(32.W))
 
-  when(io.c.fire()) {
+  when(io.c.fire) {
     seqnum := seqnum + 1.U
     when(io.c.bits.seqnum =/= seqnum) {
       seq_error := true.B
@@ -119,7 +119,7 @@ class PktTokenSource(asz: Int, cycsz: Int = 16, id: Int = 0) extends Module {
   cycle := cycle + 1.U
   io.cum_delay := cum_delay
 
-  when(io.p.fire() || !io.pattern(strobe)) {
+  when(io.p.fire || !io.pattern(strobe)) {
     strobe := strobe + 1.U
   }
   ohold.io.enq.valid := io.pattern(strobe)
@@ -155,11 +155,11 @@ class PktTokenSink(asz: Int, cycsz: Int = 16, id: Int = 0) extends Module {
   cycle := cycle + 1.U
 
   c_hold.ready := io.pattern(strobe)
-  when(c_hold.fire() || !io.pattern(strobe)) {
+  when(c_hold.fire || !io.pattern(strobe)) {
     strobe := strobe + 1.U
   }
 
-  when(c_hold.fire()) {
+  when(c_hold.fire) {
     cum_latency := cum_latency + (cycle - c_hold.bits.cycle)
     pkt_count := pkt_count + 1.U
     when(c_hold.bits.dst =/= id.U) {
