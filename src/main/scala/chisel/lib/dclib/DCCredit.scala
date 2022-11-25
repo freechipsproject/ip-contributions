@@ -76,6 +76,5 @@ class DCCreditReceiver[D <: Data](data: D, maxCredit: Int) extends Module {
   }
   io.fifoCount := outFifo.io.count
   val ocredit = RegNext(next = nextCredit, init = false.B)
-  io.deq <> outFifo.io.deq
   io.enq.credit := ocredit
 }
