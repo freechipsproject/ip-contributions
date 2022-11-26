@@ -13,8 +13,8 @@ class ArbMirrorTestbench(ways: Int) extends Module {
 
   val arb = Module(new DCArbiter(new ColorToken(ways, 16), ways, false))
   val mir = Module(new DCMirror(new ColorToken(ways, 16), ways))
-  val i_color_error = Wire(Vec(ways, Bool()))
-  val i_seq_error = Wire(Vec(ways, Bool()))
+  val iColorError = Wire(Vec(ways, Bool()))
+  val iSeqError = Wire(Vec(ways, Bool()))
 
   for (i <- 0 until ways) {
     val src = Module(new ColorSource(ways, 16))
@@ -31,12 +31,12 @@ class ArbMirrorTestbench(ways: Int) extends Module {
 
     src.io.p <> arb.io.c(i)
     mir.io.p(i) <> dst.io.c
-    i_color_error(i) := dst.io.colorError
-    i_seq_error(i) := dst.io.seqError
+    iColorError(i) := dst.io.colorError
+    iSeqError(i) := dst.io.seqError
   }
 
-  io.colorError := Cat(i_color_error).orR()
-  io.seqError := Cat(i_seq_error).orR()
+  io.colorError := Cat(iColorError).orR()
+  io.seqError := Cat(iSeqError).orR()
 
   arb.io.p <> mir.io.c
 

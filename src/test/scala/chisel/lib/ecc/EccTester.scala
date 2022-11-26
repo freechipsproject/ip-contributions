@@ -5,14 +5,13 @@ package chisel.lib.ecc
 import chisel3._
 import chisel3.stage.ChiselStage
 import chiseltest._
-import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.freespec.AnyFreeSpec
 
 import scala.util.Random
 
-class EccTester extends AnyFlatSpec with ChiselScalatestTester {
-  behavior.of("Testers2")
+class EccTester extends AnyFreeSpec with ChiselScalatestTester {
 
-  it should "send data without errors" in {
+  "send data without errors" in {
     for (width <- 4 to 30) {
       test(new EccPair(width = width)) { c =>
         {
@@ -34,12 +33,12 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-  it should "correct single bit errors" in {
+  "correct single bit errors" in {
     for (width <- 4 to 30) {
       test(new EccPair(width = width)) { c =>
         {
           val rnd = new Random()
-          for (i <- 0 to c.getWidthParam) {
+          for (i <- 0 until c.getWidthParam) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
 
             c.io.dataIn.poke(testVal.U)
@@ -57,12 +56,12 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-  it should "correct single-bit ecc errors" in {
+  "correct single-bit ecc errors" in {
     for (width <- 4 to 30) {
       test(new EccPair(width = width)) { c =>
         {
           val rnd = new Random()
-          for (i <- 0 to calcCodeBits(width)) {
+          for (i <- 0 until calcCodeBits(width)) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
 
             c.io.dataIn.poke(testVal.U)
@@ -80,12 +79,12 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-  it should "support wide values" in {
+  "support wide values" in {
     for (width <- Seq(48, 64, 96, 128, 256)) {
       test(new EccPair(width = width)) { c =>
         {
           val rnd = new Random()
-          for (i <- 0 to c.getWidthParam) {
+          for (i <- 0 until c.getWidthParam) {
             val testVal = rnd.nextInt(256)
 
             c.io.dataIn.poke(testVal.U)
@@ -108,12 +107,12 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-  it should "detect double bit errors" in {
+  "detect double bit errors" in {
     for (width <- 4 to 30) {
       test(new EccPair(width = width)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
         {
           val rnd = new Random()
-          for (i <- 0 to c.getWidthParam) {
+          for (i <- 0 until c.getWidthParam) {
             val testVal = rnd.nextInt(1 << c.getWidthParam)
 
             c.io.dataIn.poke(testVal.U)
@@ -131,7 +130,7 @@ class EccTester extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-  it should "support functional inference" in {
+  "support functional inference" in {
     test(new Module {
       val io = IO(new Bundle {
         val dataIn = Input(UInt(16.W))

@@ -19,39 +19,40 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
     val grant = Output(UInt(inputs.W))
     val rearb = if (locking) Some(Input(UInt(inputs.W))) else None
   })
+
   override def desiredName: String = "DCArbiter_" + data.toString
 
-  val just_granted = RegInit(1.asUInt(inputs.W))
-  val to_be_granted = Wire(UInt(inputs.W))
-  val nxt_rr_locked = Wire(Bool())
-  val io_c_valid = Wire(UInt(inputs.W))
+  val justGranted = RegInit(1.asUInt(inputs.W))
+  val toBeGranted = Wire(UInt(inputs.W))
+  val nxtRRLocked = Wire(Bool())
+  val ioCValid = Wire(UInt(inputs.W))
 
   for (i <- 0 until inputs) {
-    io.c(i).ready := to_be_granted(i) && io.p.ready
+    io.c(i).ready := toBeGranted(i) && io.p.ready
   }
-  io.grant := to_be_granted
+  io.grant := toBeGranted
 
   def nxt_grant(cur_grant: UInt, cur_req: UInt, cur_accept: Bool): UInt = {
-    val msk_req = Wire(UInt(inputs.W))
-    val tmp_grant = Wire(UInt(inputs.W))
-    val tmp_grant2 = Wire(UInt(inputs.W))
+    val mskReq = Wire(UInt(inputs.W))
+    val tmpGrant = Wire(UInt(inputs.W))
+    val tmpGrant2 = Wire(UInt(inputs.W))
     val rv = Wire(UInt(inputs.W))
 
-    msk_req := cur_req & ~((cur_grant - 1.U) | cur_grant)
-    tmp_grant := msk_req & (~msk_req + 1.U)
-    tmp_grant2 := cur_req & (~cur_req + 1.U)
+    mskReq := cur_req & ~((cur_grant - 1.U) | cur_grant)
+    tmpGrant := mskReq & (~mskReq + 1.U)
+    tmpGrant2 := cur_req & (~cur_req + 1.U)
 
     when(cur_accept) {
-      when(msk_req =/= 0.U) {
-        rv := tmp_grant
+      when(mskReq =/= 0.U) {
+        rv := tmpGrant
       }.otherwise {
-        rv := tmp_grant2
+        rv := tmpGrant2
       }
     }.elsewhen(cur_req =/= 0.U) {
-      when(msk_req =/= 0.U) {
-        rv := Cat(tmp_grant(0), tmp_grant(inputs - 1, 1))
+      when(mskReq =/= 0.U) {
+        rv := Cat(tmpGrant(0), tmpGrant(inputs - 1, 1))
       }.otherwise {
-        rv := Cat(tmp_grant2(0), tmp_grant2(inputs - 1, 1))
+        rv := Cat(tmpGrant2(0), tmpGrant2(inputs - 1, 1))
       }
     }.otherwise {
       rv := cur_grant
@@ -59,43 +60,43 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
     rv
   }
 
-  io_c_valid := Cat(io.c.map(_.valid).reverse)
+  ioCValid := Cat(io.c.map(_.valid).reverse)
 
-  io.p.valid := io_c_valid.orR()
-  to_be_granted := just_granted
+  io.p.valid := ioCValid.orR()
+  toBeGranted := justGranted
 
   if (locking) {
     val rr_locked = RegInit(false.B)
 
-    when((io_c_valid & just_granted).orR() && !rr_locked) {
-      nxt_rr_locked := true.B
-    }.elsewhen((io_c_valid & just_granted & io.rearb.get).orR()) {
-      nxt_rr_locked := false.B
+    when((ioCValid & justGranted).orR() && !rr_locked) {
+      nxtRRLocked := true.B
+    }.elsewhen((ioCValid & justGranted & io.rearb.get).orR()) {
+      nxtRRLocked := false.B
     }.otherwise {
-      nxt_rr_locked := rr_locked
+      nxtRRLocked := rr_locked
     }
 
-    when(nxt_rr_locked && (io_c_valid & just_granted).orR()) {
-      to_be_granted := just_granted
+    when(nxtRRLocked && (ioCValid & justGranted).orR()) {
+      toBeGranted := justGranted
     }.otherwise {
       when(io.p.ready) {
-        to_be_granted := Cat(just_granted(0), just_granted(inputs - 1, 1))
+        toBeGranted := Cat(justGranted(0), justGranted(inputs - 1, 1))
       }.otherwise {
-        to_be_granted := just_granted
+        toBeGranted := justGranted
       }
     }
   } else {
-    nxt_rr_locked := false.B
-    to_be_granted := nxt_grant(just_granted, io_c_valid, io.p.ready)
+    nxtRRLocked := false.B
+    toBeGranted := nxt_grant(justGranted, ioCValid, io.p.ready)
   }
 
-  when(to_be_granted =/= 0.U) {
-    just_granted := to_be_granted
+  when(toBeGranted =/= 0.U) {
+    justGranted := toBeGranted
   }
 
   io.p.bits := io.c(0).bits
   for (i <- 0 until inputs) {
-    when(to_be_granted(i)) {
+    when(toBeGranted(i)) {
       io.p.bits := io.c(i).bits
     }
   }

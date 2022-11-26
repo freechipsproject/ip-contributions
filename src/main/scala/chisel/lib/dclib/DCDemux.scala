@@ -7,8 +7,8 @@ import chisel3._
   * Demultiplex a stream of tokens with an identifier "sel",
   * as inverse of RRArbiter.
   *
-  * @param data  Data type of incoming/outgoing data
-  * @param n     Number of mux outputs
+  * @param data Data type of incoming/outgoing data
+  * @param n    Number of mux outputs
   */
 class DCDemux[D <: Data](data: D, n: Int) extends Module {
   val io = IO(new Bundle {
@@ -16,6 +16,7 @@ class DCDemux[D <: Data](data: D, n: Int) extends Module {
     val c = Flipped(new DecoupledIO(data.cloneType))
     val p = Vec(n, new DecoupledIO(data.cloneType))
   })
+
   override def desiredName: String = "DCDemux_" + data.toString
 
   io.c.ready := 0.U

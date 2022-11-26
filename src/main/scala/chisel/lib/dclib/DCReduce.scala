@@ -7,9 +7,9 @@ import chisel3.util._
   * This module declares a multi-input decoupled operator.  This is an example using showing how to use
   * [[DCInput]] and [[DCOutput]] modules to create a module with registered-output timing.
   *
-  * @param data   Data type to operate on
-  * @param n      The number of inputs for the operator
-  * @param op     Function with the required operator
+  * @param data Data type to operate on
+  * @param n    The number of inputs for the operator
+  * @param op   Function with the required operator
   */
 class DCReduce[D <: Data](data: D, n: Int, op: (D, D) => D) extends Module {
   val io = IO(new Bundle {
@@ -17,28 +17,29 @@ class DCReduce[D <: Data](data: D, n: Int, op: (D, D) => D) extends Module {
     val z = Decoupled(data.cloneType)
   })
   require(n >= 2)
-  val a_int = for (n <- 0 until n) yield DCInput(io.a(n))
-  val z_int = Wire(Decoupled(data.cloneType))
-  val z_dcout = DCOutput(z_int)
+  val aInt = for (n <- 0 until n) yield DCInput(io.a(n))
+  val zInt = Wire(Decoupled(data.cloneType))
+  val zDcout = DCOutput(zInt)
 
-  val all_valid = a_int.map(_.valid).reduce(_ & _)
-  z_int.bits := a_int.map(_.bits).reduce(op)
-  when(all_valid & z_int.ready) {
-    z_int.valid := true.B
+  val all_valid = aInt.map(_.valid).reduce(_ & _)
+  zInt.bits := aInt.map(_.bits).reduce(op)
+  when(all_valid & zInt.ready) {
+    zInt.valid := true.B
     for (n <- 0 until n) {
-      a_int(n).ready := true.B
+      aInt(n).ready := true.B
     }
   }.otherwise {
-    z_int.valid := false.B
+    zInt.valid := false.B
     for (n <- 0 until n) {
-      a_int(n).ready := false.B
+      aInt(n).ready := false.B
     }
   }
-  io.z <> z_dcout
+  io.z <> zDcout
 }
 
 object CreateDcReduce extends App {
   def xor(a: UInt, b: UInt): UInt = a ^ b
+
   (new chisel3.stage.ChiselStage).execute(
     Array("--target-dir", "generated"),
     Seq(chisel3.stage.ChiselGeneratorAnnotation(() => new DCReduce(UInt(8.W), n = 6, op = xor)))

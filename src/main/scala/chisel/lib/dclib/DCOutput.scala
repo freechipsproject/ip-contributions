@@ -12,14 +12,15 @@ class DCOutput[D <: Data](data: D) extends Module {
     val enq = Flipped(new DecoupledIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
   })
+
   override def desiredName: String = "DCOutput_" + data.toString
 
-  val r_valid = RegInit(false.B)
+  val rValid = RegInit(false.B)
 
-  io.enq.ready := io.deq.ready || !r_valid
-  r_valid := io.enq.fire || (r_valid && !io.deq.ready)
-  io.deq.bits := RegEnable(io.enq.bits, io.enq.fire)
-  io.deq.valid := r_valid
+  io.enq.ready := io.deq.ready || !rValid
+  rValid := io.enq.fire || (rValid && !io.deq.ready)
+  io.deq.bits := RegEnable(next = io.enq.bits, enable = io.enq.fire)
+  io.deq.valid := rValid
 }
 
 // Helper function for functional inference

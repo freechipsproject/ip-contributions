@@ -12,7 +12,6 @@ class PktToken(asz: Int, cycsz: Int = 16) extends Bundle {
 class ColorToken(colors: Int, dsz: Int) extends Bundle {
   val color = UInt(log2Ceil(colors).W)
   val seqnum = UInt(dsz.W)
-
 }
 
 class ColorSource(colors: Int, dsz: Int) extends Module {

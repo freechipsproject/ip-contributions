@@ -16,6 +16,7 @@ class DCInput[D <: Data](data: D) extends Module {
     val enq = Flipped(new DecoupledIO(data.cloneType))
     val deq = new DecoupledIO(data.cloneType)
   })
+
   override def desiredName: String = "DCInput_" + data.toString
 
   // val r_valid = RegInit(false.B)
