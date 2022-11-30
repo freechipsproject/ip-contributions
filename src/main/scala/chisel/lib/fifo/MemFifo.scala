@@ -21,7 +21,7 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
     (cntReg, nextVal)
   }
 
-  val mem = SyncReadMem(depth, gen)
+  val mem = SyncReadMem(depth, gen, SyncReadMem.WriteFirst)
 
   val incrRead = WireInit(false.B)
   val incrWrite = WireInit(false.B)
