@@ -32,7 +32,7 @@ class Master(frequency: Int, clkfreq: Int, bsize: Int) extends Module {
 
   val state = RegInit(State.sIdle)
 
-  val clockPrescaler = (frequency + clkfreq/2) / clkfreq / 2 - 1
+  val clockPrescaler = (frequency + clkfreq / 2) / clkfreq / 2 - 1
   val CLKPRE = clockPrescaler.asUInt(clockPrescaler.W)
 
   val bits = RegInit(0.U((bsize - 1).W))
@@ -64,30 +64,30 @@ class Master(frequency: Int, clkfreq: Int, bsize: Int) extends Module {
       regin := 0.U
     }
     is(State.sHalfCycle) {
-      when (cnt > 0.U) {
+      when(cnt > 0.U) {
         cnt := cnt - 1.U
-      }.otherwise{
+      }.otherwise {
         cnt := CLKPRE
         state := State.sLoad
       }
     }
     is(State.sLoad) {
-      when (cnt > 0.U) {
+      when(cnt > 0.U) {
         cnt := cnt - 1.U
-      }.elsewhen (bits > 0.U || io.din.ready) {
-          cnt := CLKPRE
-          state := State.sShift
-          when (msbfirstReg) {
-            regin := Cat(regin(bsize - 2, 0), io.miso)
-          }.otherwise {
-            regin := Cat(io.miso, regin(bsize - 1, 1))
-          }
+      }.elsewhen(bits > 0.U || io.din.ready) {
+        cnt := CLKPRE
+        state := State.sShift
+        when(msbfirstReg) {
+          regin := Cat(regin(bsize - 2, 0), io.miso)
+        }.otherwise {
+          regin := Cat(io.miso, regin(bsize - 1, 1))
+        }
       }
     }
     is(State.sShift) {
-      when (cnt > 0.U) {
+      when(cnt > 0.U) {
         cnt := cnt - 1.U
-      }.otherwise{
+      }.otherwise {
         when(bits > 0.U) {
           cnt := CLKPRE
           bits := bits - 1.U
@@ -107,9 +107,9 @@ class Master(frequency: Int, clkfreq: Int, bsize: Int) extends Module {
   io.din.valid := lastBitShifted && !RegNext(lastBitShifted)
 
   when(state === State.sLoad) {
-      io.sclk := cpolReg ^ cphaReg
+    io.sclk := cpolReg ^ cphaReg
   }.elsewhen(state === State.sShift) {
-      io.sclk := !(cpolReg ^ cphaReg)
+    io.sclk := !(cpolReg ^ cphaReg)
   }.otherwise {
     io.sclk := cpolReg
   }
