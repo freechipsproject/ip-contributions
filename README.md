@@ -16,6 +16,7 @@ the community. This is the place to do it.
 | spi2wb | maven | Fabien Marteau | Drive a wishbone master bus with SPI |
 | dclib | internal | Guy Hutchison | Utility components for DecoupledIO interfaces |
 | ecc | internal | Guy Hutchison | Hamming Error-Correcting code modules |
+| iir | internal | Kevin Joly | Infinite Impulse Response filter module |
 
 ### Using ip-contributions
 
