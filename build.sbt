@@ -16,7 +16,8 @@ lazy val publishSettings = Seq (
 
   // disable publish with scala version, otherwise artifact name will include scala version 
   // e.g cassper_2.11
-  crossPaths := false,
+  // MS: maybe we should enable this again
+  crossPaths := true,
 
   // add sonatype repository settings
   // snapshot versions publish to sonatype snapshot repository
@@ -45,6 +46,6 @@ lazy val root = (project in file("."))
       "-Xcheckinit",
     ),
     addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.5" cross CrossVersion.full),
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+    // addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
   )
   .settings(publishSettings: _*)

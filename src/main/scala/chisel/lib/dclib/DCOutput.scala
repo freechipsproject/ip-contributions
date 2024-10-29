@@ -19,7 +19,7 @@ class DCOutput[D <: Data](data: D) extends Module {
 
   io.enq.ready := io.deq.ready || !rValid
   rValid := io.enq.fire || (rValid && !io.deq.ready)
-  io.deq.bits := RegEnable(next = io.enq.bits, enable = io.enq.fire)
+  io.deq.bits := RegEnable(io.enq.bits, io.enq.fire)
   io.deq.valid := rValid
 }
 

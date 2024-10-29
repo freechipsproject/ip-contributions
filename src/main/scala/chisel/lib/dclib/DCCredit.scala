@@ -33,8 +33,8 @@ class DCCreditSender[D <: Data](data: D, maxCredit: Int) extends Module {
     curCredit := curCredit - 1.U
   }
   io.enq.ready := curCredit > 0.U
-  val dataOut = RegEnable(next = io.enq.bits, enable = io.enq.fire)
-  val validOut = RegNext(next = io.enq.fire, init = false.B)
+  val dataOut = RegEnable(io.enq.bits, io.enq.fire)
+  val validOut = RegNext(io.enq.fire, false.B)
   io.deq.valid := validOut
   io.deq.bits := dataOut
   io.curCredit := curCredit
