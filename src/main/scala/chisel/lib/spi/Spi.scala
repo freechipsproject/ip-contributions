@@ -9,7 +9,6 @@ package chisel.lib.spi
 
 import chisel3._
 import chisel3.experimental.Analog
-import chisel3.experimental.ChiselEnum
 import chisel3.stage.ChiselStage
 import chisel3.util._
 
