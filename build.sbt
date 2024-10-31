@@ -2,7 +2,7 @@
 
 ThisBuild / scalaVersion     := "2.12.17"
 ThisBuild / crossScalaVersions := Seq("2.12.17", "2.13.10")
-ThisBuild / version          := "0.5.2"
+ThisBuild / version          := "0.5.3"
 
 
 lazy val publishSettings = Seq (
