@@ -17,7 +17,7 @@ lazy val publishSettings = Seq (
   // disable publish with scala version, otherwise artifact name will include scala version 
   // e.g cassper_2.11
   // MS: maybe we should enable this again
-  crossPaths := true,
+  crossPaths := false,
 
   // add sonatype repository settings
   // snapshot versions publish to sonatype snapshot repository
