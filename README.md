@@ -25,7 +25,7 @@ the community. This is the place to do it.
 line to your ```build.sbt```
 
 ```
-libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.5.2"
+libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.5.3"
 
 ```
 
