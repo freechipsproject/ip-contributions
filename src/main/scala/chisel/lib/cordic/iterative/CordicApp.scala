@@ -62,5 +62,5 @@ object CordicApp extends App {
   )
   val (chiselArgs, params) = argParse(args.toList, defaultParams)
   // Run the Chisel driver to generate a cordic
-  (new ChiselStage).emitSystemVerilog(new IterativeCordic(params), chiselArgs.toArray)
+  emitVerilog(new IterativeCordic(params), chiselArgs.toArray)
 }

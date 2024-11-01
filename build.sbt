@@ -1,8 +1,8 @@
 // See README.md for license details.
 
-ThisBuild / scalaVersion     := "2.13.10"
-ThisBuild / crossScalaVersions := Seq("2.12.17", "2.13.10")
-ThisBuild / version          := "0.5.4"
+ThisBuild / scalaVersion     := "2.13.14"
+// ThisBuild / crossScalaVersions := Seq("2.12.17", "2.13.10")
+ThisBuild / version          := "0.6.0"
 
 
 lazy val publishSettings = Seq (
@@ -16,7 +16,6 @@ lazy val publishSettings = Seq (
 
   // disable publish with scala version, otherwise artifact name will include scala version 
   // e.g cassper_2.11
-  // MS: maybe we should enable this again
   crossPaths := false,
 
   // add sonatype repository settings
@@ -35,9 +34,9 @@ lazy val root = (project in file("."))
     name := "ip-contributions",
     resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
-      "edu.berkeley.cs" %% "chisel3" % "3.5.6",
+      "edu.berkeley.cs" %% "chisel3" % "3.6.1",
       "edu.berkeley.cs" %% "dsptools" % "1.5.6",
-      "edu.berkeley.cs" %% "chiseltest" % "0.5.6" % "test",
+      "edu.berkeley.cs" %% "chiseltest" % "0.6.2" % "test",
     ),
     scalacOptions ++= Seq(
       "-language:reflectiveCalls",
@@ -45,7 +44,6 @@ lazy val root = (project in file("."))
       "-feature",
       "-Xcheckinit",
     ),
-    addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.6" cross CrossVersion.full),
-    // addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+    addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.6.1" cross CrossVersion.full),
   )
   .settings(publishSettings: _*)

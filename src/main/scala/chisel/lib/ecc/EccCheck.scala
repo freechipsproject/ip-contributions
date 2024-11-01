@@ -31,7 +31,7 @@ class EccCheck[D <: Data](data: D, doubleBit: Boolean = true) extends Module {
 
   // assign input bits to their correct location in the combined input/ecc vector
   for (i <- 0 until io.dataIn.getWidth) {
-    vecIn(reverseMap(i)) := io.dataIn.asUInt()(i)
+    vecIn(reverseMap(i)) := io.dataIn.asUInt(i)
   }
   // assign eccBits to their location in the combined vector
   for (i <- 0 until eccBits) {
@@ -58,7 +58,7 @@ class EccCheck[D <: Data](data: D, doubleBit: Boolean = true) extends Module {
   io.dataOut := Cat(outDataVec.reverse).asTypeOf(data.cloneType)
   if (io.doubleBitError.isDefined) {
     val computedParity = Wire(Bool())
-    computedParity := io.dataIn.asUInt().xorR() ^ io.eccIn.xorR()
+    computedParity := io.dataIn.asUInt.xorR ^ io.eccIn.xorR
     io.doubleBitError.get := (io.errorSyndrome =/= 0.U) && (computedParity === io.parIn.get)
   }
 }

@@ -62,21 +62,21 @@ class DCArbiter[D <: Data](data: D, inputs: Int, locking: Boolean) extends Modul
 
   ioCValid := Cat(io.c.map(_.valid).reverse)
 
-  io.p.valid := ioCValid.orR()
+  io.p.valid := ioCValid.orR
   toBeGranted := justGranted
 
   if (locking) {
     val rr_locked = RegInit(false.B)
 
-    when((ioCValid & justGranted).orR() && !rr_locked) {
+    when((ioCValid & justGranted).orR && !rr_locked) {
       nxtRRLocked := true.B
-    }.elsewhen((ioCValid & justGranted & io.rearb.get).orR()) {
+    }.elsewhen((ioCValid & justGranted & io.rearb.get).orR) {
       nxtRRLocked := false.B
     }.otherwise {
       nxtRRLocked := rr_locked
     }
 
-    when(nxtRRLocked && (ioCValid & justGranted).orR()) {
+    when(nxtRRLocked && (ioCValid & justGranted).orR) {
       toBeGranted := justGranted
     }.otherwise {
       when(io.p.ready) {

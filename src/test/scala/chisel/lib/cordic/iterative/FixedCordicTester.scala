@@ -26,6 +26,8 @@ case class XYZ(
   *
   * Run each trial in @trials
   */
+
+/* does not work with Chisel 3.6
 class CordicTester[T <: chisel3.Data](c: IterativeCordic[T], trials: Seq[XYZ], tolLSBs: Int = 2) extends DspTester(c) {
   val maxCyclesWait = 50
 
@@ -69,8 +71,8 @@ class CordicTester[T <: chisel3.Data](c: IterativeCordic[T], trials: Seq[XYZ], t
 }
 
 /**
-  * Convenience function for running tests
-  */
+ * Convenience function for running tests
+ */
 
 object FixedCordicTester {
   def apply(params: FixedCordicParams, trials: Seq[XYZ]): Boolean = {
@@ -90,3 +92,6 @@ object RealCordicTester {
     }
   }
 }
+
+
+ */

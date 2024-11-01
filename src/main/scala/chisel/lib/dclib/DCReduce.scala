@@ -39,9 +39,12 @@ class DCReduce[D <: Data](data: D, n: Int, op: (D, D) => D) extends Module {
 
 object CreateDcReduce extends App {
   def xor(a: UInt, b: UInt): UInt = a ^ b
-
+  emitVerilog(new DCReduce(UInt(8.W), n = 6, op = xor), Array("--target-dir", "generated"))
+  /*
   (new chisel3.stage.ChiselStage).execute(
     Array("--target-dir", "generated"),
     Seq(chisel3.stage.ChiselGeneratorAnnotation(() => new DCReduce(UInt(8.W), n = 6, op = xor)))
   )
+
+   */
 }

@@ -87,10 +87,10 @@ class BitonicSorterModule[T <: Data](n: Int, proto: T, lt: (T, T) => Bool) exten
 
 //scalastyle:off magic.number
 object BitonicSorterUInt8_64Driver extends App {
-  (new ChiselStage).emitSystemVerilog(new BitonicSorterModule(64, UInt(8.W), (x: UInt, y: UInt) => x < y), args)
+  emitVerilog(new BitonicSorterModule(64, UInt(8.W), (x: UInt, y: UInt) => x < y), args)
 }
 
 //scalastyle:off magic.number
 object BitonicSorterUInt8_384Driver extends App {
-  (new ChiselStage).emitSystemVerilog(new BitonicSorterModule(384, UInt(8.W), (x: UInt, y: UInt) => x < y), args)
+  emitVerilog(new BitonicSorterModule(384, UInt(8.W), (x: UInt, y: UInt) => x < y), args)
 }

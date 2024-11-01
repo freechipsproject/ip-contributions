@@ -35,8 +35,8 @@ class ArbMirrorTestbench(ways: Int) extends Module {
     iSeqError(i) := dst.io.seqError
   }
 
-  io.colorError := Cat(iColorError).orR()
-  io.seqError := Cat(iSeqError).orR()
+  io.colorError := Cat(iColorError).orR
+  io.seqError := Cat(iSeqError).orR
 
   arb.io.p <> mir.io.c
 

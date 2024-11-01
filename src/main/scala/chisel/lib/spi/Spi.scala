@@ -125,5 +125,5 @@ class Master(frequency: Int, clkfreq: Int, bsize: Int) extends Module {
 }
 
 object Master extends App {
-  (new ChiselStage).emitSystemVerilog(new Master(100000000, 10000000, 8), Array("--target-dir", "generated"))
+  emitVerilog(new Master(100000000, 10000000, 8), Array("--target-dir", "generated"))
 }

@@ -18,12 +18,12 @@ class EccGenerate[D <: Data](data: D, doubleBit: Boolean = true) extends Module 
   val bitMapping = calcBitMapping(data.getWidth, false)
 
   for (i <- 0 until eccBits) {
-    val bitSelect: Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.dataIn.asUInt()(bitMapping(j))
+    val bitSelect: Seq[UInt] = for (j <- buildSeq(i, outWidth)) yield io.dataIn.asUInt(bitMapping(j))
     bitValue(i) := bitSelect.reduce(_ ^ _)
   }
   io.eccOut := Cat(bitValue.reverse)
   if (io.parOut.nonEmpty) {
-    io.parOut.get := io.dataIn.asUInt().xorR() ^ io.eccOut.xorR()
+    io.parOut.get := io.dataIn.asUInt.xorR ^ io.eccOut.xorR
   }
 }
 
