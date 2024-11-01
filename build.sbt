@@ -2,7 +2,7 @@
 
 ThisBuild / scalaVersion     := "2.13.14"
 // ThisBuild / crossScalaVersions := Seq("2.12.17", "2.13.10")
-ThisBuild / version          := "0.6.0"
+ThisBuild / version          := "0.6.1"
 
 
 lazy val publishSettings = Seq (
@@ -35,7 +35,6 @@ lazy val root = (project in file("."))
     resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
       "edu.berkeley.cs" %% "chisel3" % "3.6.1",
-      "edu.berkeley.cs" %% "dsptools" % "1.5.6",
       "edu.berkeley.cs" %% "chiseltest" % "0.6.2" % "test",
     ),
     scalacOptions ++= Seq(

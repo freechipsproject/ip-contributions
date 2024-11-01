@@ -25,7 +25,7 @@ the community. This is the place to do it.
 line to your ```build.sbt```
 
 ```
-libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.5.4"
+libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.6.1"
 ```
 
 ### Versions
@@ -33,7 +33,7 @@ libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.5.4"
 
 | ip-contributions | Chisel | Scala |
 |------------------|--------|-------|
-| 0.6.0            | 3.6.1  | 2.13  |
+| 0.6.1            | 3.6.1  | 2.13  |
 | 0.5.4            | 3.5.6  | 2.13  |
 | 0.5.3            | 3.5.6  | 2.12  |
 | 0.5.1            | 3.5.5  | 2.12  |
