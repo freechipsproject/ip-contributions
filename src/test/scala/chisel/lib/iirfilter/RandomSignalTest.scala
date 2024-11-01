@@ -124,7 +124,7 @@ class RandomSignalTest extends AnyFlatSpec with IIRFilterBehavior with ChiselSca
   val outputWidth = inputWidth + coefWidth + log2Ceil(num.length + den.length) + 1
 
   // Generate random input data [-1., 1.]
-  val inputData = Seq.fill(100)(-1.0 + Random.nextDouble * 2.0)
+  val inputData = Seq.fill(100)(-1.0 + Random.nextDouble() * 2.0)
 
   // Compute expected outputs
   val expectedOutput = computeExpectedOutput(num, den, inputData)

@@ -108,7 +108,7 @@ class RandomSignalTest extends AnyFlatSpec with FIRFilterBehavior with ChiselSca
   val coefDecimalWidth = 28
 
   // Generate random input data [-1., 1.]
-  val inputData = Seq.fill(100)(-1.0 + Random.nextDouble * 2.0)
+  val inputData = Seq.fill(100)(-1.0 + Random.nextDouble() * 2.0)
 
   // Compute expected outputs
   val expectedOutput = computeExpectedOutput(coefs, inputData)

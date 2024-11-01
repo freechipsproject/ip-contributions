@@ -11,7 +11,7 @@ class SpiMasterTest extends AnyFlatSpec with ChiselScalatestTester {
   val frequency = 100000000
   val clkfreq = 10000000
 
-  def transferOneWord(bsize: Int, mode: Int, msbFirst: Boolean, dut: => Master) {
+  def transferOneWord(bsize: Int, mode: Int, msbFirst: Boolean, dut: => Master): Unit = {
     test(dut) { dut =>
       val clkStepPerHalfSclk = (frequency + clkfreq / 2) / clkfreq / 2 - 1
 

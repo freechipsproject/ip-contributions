@@ -24,7 +24,7 @@ object testFifo {
     dut.io.enq.bits.poke(value.U)
     dut.io.enq.valid.poke(true.B)
     // wait for slot to become available
-    while (!dut.io.enq.ready.peekBoolean) {
+    while (!dut.io.enq.ready.peekBoolean()) {
       dut.clock.step()
     }
     dut.clock.step()
@@ -34,7 +34,7 @@ object testFifo {
 
   private def pop(dut: Fifo[UInt]): BigInt = {
     // wait for value to become available
-    while (!dut.io.deq.valid.peekBoolean) {
+    while (!dut.io.deq.valid.peekBoolean()) {
       dut.clock.step()
     }
     // check value
@@ -49,7 +49,7 @@ object testFifo {
 
   private def pop(dut: Fifo[UInt], value: BigInt): Unit = {
     // wait for value to become available
-    while (!dut.io.deq.valid.peekBoolean) {
+    while (!dut.io.deq.valid.peekBoolean()) {
       dut.clock.step()
     }
     // check value
@@ -76,7 +76,7 @@ object testFifo {
     var cnt = 0
     for (i <- 0 until 100) {
       dut.io.enq.bits.poke(i.U)
-      if (dut.io.enq.ready.peekBoolean) {
+      if (dut.io.enq.ready.peekBoolean()) {
         cnt += 1
       }
       dut.clock.step()

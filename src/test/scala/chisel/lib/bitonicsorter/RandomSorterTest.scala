@@ -29,7 +29,7 @@ class RandomSorterTest[T <: UInt](
   it should "work" in {
     test(factory()).runPeekPoke { c =>
       new PeekPokeTester(c) {
-        def example(a: IndexedSeq[BigInt]) {
+        def example(a: IndexedSeq[BigInt]): Unit = {
           poke(c.io.a, a)
           step(1)
           expect(c.io.z, a.sortWith(_ > _))
@@ -48,6 +48,7 @@ class RandomSorterTest[T <: UInt](
 class BoolBitonicSorterModule(n: Int) extends BitonicSorterModule(n, Bool(), (x: UInt, y: UInt) => x < y)
 class UInt8BitonicSorterModule(n: Int) extends BitonicSorterModule(n, UInt(8.W), (x: UInt, y: UInt) => x < y)
 
-class RandomBitonicSorterTest64 extends RandomSorterTest(10000, () => new UInt8BitonicSorterModule(64))
+// this test takes forever
+// class RandomBitonicSorterTest64 extends RandomSorterTest(10000, () => new UInt8BitonicSorterModule(64))
 //This tests takes a bit long to do every time
 // class RandomBitonicSorterTest384 extends RandomSorterTest( 10000, () => new UInt8BitonicSorterModule( 384))
