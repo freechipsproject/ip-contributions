@@ -21,7 +21,7 @@ class ExhaustiveSorterTest[T <: Bool](factory: () => SorterModuleIfc[T])
 
     test(factory()).runPeekPoke { c =>
       new PeekPokeTester(c) {
-        def example(a: IndexedSeq[BigInt]) : Unit = {
+        def example(a: IndexedSeq[BigInt]): Unit = {
           poke(c.io.a, a)
           step(1)
           expect(c.io.z, a.sortWith(_ > _))
