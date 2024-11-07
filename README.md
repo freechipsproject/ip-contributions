@@ -25,14 +25,16 @@ the community. This is the place to do it.
 line to your ```build.sbt```
 
 ```
-libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.6.1"
+libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "5.0.0"
 ```
 
 ### Versions
 
+```ip-contributions``` exists for different Chisel/Scala versions:
 
 | ip-contributions | Chisel | Scala |
 |------------------|--------|-------|
+| 5.0.0            | 5.3.0  | 2.13  |
 | 0.6.1            | 3.6.1  | 2.13  |
 | 0.5.4            | 3.5.6  | 2.13  |
 | 0.5.3            | 3.5.6  | 2.12  |
