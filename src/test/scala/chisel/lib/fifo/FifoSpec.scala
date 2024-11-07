@@ -5,7 +5,6 @@ package chisel.lib.fifo
 
 import chisel3._
 import chiseltest._
-import firrtl.AnnotationSeq
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
@@ -177,7 +176,7 @@ object testFifo {
 }
 
 class FifoSpec extends AnyFlatSpec with ChiselScalatestTester {
-  private val defaultOptions: AnnotationSeq = Seq(WriteVcdAnnotation)
+  private val defaultOptions = Seq(WriteVcdAnnotation)
 
   "BubbleFifo" should "pass" in {
     test(new BubbleFifo(UInt(16.W), 4)).withAnnotations(defaultOptions)(testFifo(_, 2))

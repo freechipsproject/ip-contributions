@@ -9,7 +9,6 @@
 package chisel.lib.uart
 
 import chisel3._
-import chisel3.stage.ChiselStage
 import chisel3.util._
 
 class UartIO extends DecoupledIO(UInt(8.W))
@@ -207,5 +206,5 @@ class UartMain(frequency: Int, baudRate: Int) extends Module {
 }
 
 object UartMain extends App {
-  (new ChiselStage).emitSystemVerilog(new UartMain(50000000, 115200), Array("--target-dir", "generated"))
+  emitVerilog(new UartMain(50000000, 115200), Array("--target-dir", "generated"))
 }

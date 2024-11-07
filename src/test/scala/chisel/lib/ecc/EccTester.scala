@@ -3,7 +3,6 @@
 package chisel.lib.ecc
 
 import chisel3._
-import chisel3.stage.ChiselStage
 import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
 
@@ -152,5 +151,5 @@ class EccTester extends AnyFreeSpec with ChiselScalatestTester {
 }
 
 object EccGenerator extends App {
-  (new ChiselStage).emitSystemVerilog(new EccCheck(UInt(8.W)), Array("--target-dir", "generated"))
+  emitVerilog(new EccCheck(UInt(8.W)), Array("--target-dir", "generated"))
 }
