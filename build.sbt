@@ -1,11 +1,12 @@
 // See README.md for license details.
 
 ThisBuild / scalaVersion     := "2.13.14"
-ThisBuild / version          := "5.0.1"
+ThisBuild / version          := "5.3.0"
 
 
 lazy val publishSettings = Seq (
   // groupId, SCM, license information
+  versionScheme := Some("semver-spec"),
   organization := "edu.berkeley.cs",
   homepage := Some(url("https://github.com/freechipsproject/ip-contributions")),
   scmInfo := Some(ScmInfo(url("https://github.com/freechipsproject/ip-contributions"), "git@github.com/freechipsproject/ip-contributions")),
