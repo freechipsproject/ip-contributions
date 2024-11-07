@@ -1,7 +1,7 @@
 // See README.md for license details.
 
 ThisBuild / scalaVersion     := "2.13.14"
-ThisBuild / version          := "5.0.0"
+ThisBuild / version          := "5.0.1"
 
 
 lazy val publishSettings = Seq (
@@ -20,12 +20,7 @@ lazy val publishSettings = Seq (
   // add sonatype repository settings
   // snapshot versions publish to sonatype snapshot repository
   // other versions publish to sonatype staging repository
-  publishTo := Some(
-    if (isSnapshot.value)
-      Opts.resolver.sonatypeSnapshots
-    else
-      Opts.resolver.sonatypeStaging
-  ),
+  publishTo := Some(Opts.resolver.sonatypeStaging)
 )
 
 val chiselVersion = "5.3.0"
@@ -33,7 +28,7 @@ val chiselVersion = "5.3.0"
 lazy val root = (project in file("."))
   .settings(
     name := "ip-contributions",
-    resolvers += Resolver.sonatypeRepo("snapshots"),
+    // resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
       "org.chipsalliance" %% "chisel" % chiselVersion,
       "edu.berkeley.cs" %% "chiseltest" % "5.0.2" % "test",
