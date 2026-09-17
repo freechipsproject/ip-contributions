@@ -18,6 +18,7 @@ the community. This is the place to do it.
 | ecc | internal | Guy Hutchison | Hamming Error-Correcting code modules |
 | iir | internal | Kevin Joly | Infinite Impulse Response filter module |
 | fir | internal | Kevin Joly | Finite Impulse Response filter module |
+| FreeSet | internal | Maarten Boersma | Scalable Resource Tag Manager |
 
 ### Using ip-contributions
 
